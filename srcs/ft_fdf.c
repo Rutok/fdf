@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/08 23:15:04 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/08 23:37:34 by nboste           ###   ########.fr       */
+/*   Updated: 2016/12/09 00:29:25 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,12 @@ int		fdf_init(t_env *env, int width, int height)
 	mlx_expose_hook(env->win, &fdf_expose_hook, env);
 	mlx_key_hook(env->win, &fdf_key_hook, env);
 	mlx_mouse_hook(env->win, &fdf_mouse_hook, env);
-	mlx_loop_hook(env->win, &fdf_loop_hook, env);
+//	mlx_loop_hook(env->win, &fdf_loop_hook, env);
+	return (1);
 }
 
-int				fdf_loop(t_env *env)
+int		fdf_loop(t_env *env)
 {
 	mlx_loop(env->mlx);
+	return (0);
 }

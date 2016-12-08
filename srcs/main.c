@@ -1,30 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_fdf.h                                           :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/12/08 23:12:30 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/09 00:00:17 by nboste           ###   ########.fr       */
+/*   Created: 2016/12/08 23:50:04 by nboste            #+#    #+#             */
+/*   Updated: 2016/12/09 00:14:33 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_FDF_H
-# define FT_FDF_H
+#include "ft_fdf.h"
+#include "libft.h"
 
-#include <stdlib.h>
-#include "mlx.h"
-
-typedef struct	s_env
+int		main(int argc, char **argv)
 {
-	void	*mlx;
-	void	*win;
-	void	*img;
-}				t_env;
+	t_env	env;
 
-int				fdf_init(t_env *env, int width, int height);
-
-int				fdf_loop(t_env *env);
-
-#endif
+	if (argc < 3 || !fdf_init(&env, ft_atoi(argv[1]), ft_atoi(argv[2])))
+		return (1);
+	fdf_loop(&env);
+	return (0);
+}
