@@ -6,7 +6,7 @@
 #    By: nboste <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/12/08 23:43:17 by nboste            #+#    #+#              #
-#    Updated: 2016/12/09 02:03:32 by nboste           ###   ########.fr        #
+#    Updated: 2016/12/09 04:53:18 by nboste           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,8 @@ FLG = -Wall -Wextra -Werror
 SRC = srcs/main.c \
 	  srcs/ft_fdf.c \
 	  srcs/ft_fdf_hooks.c \
+	  srcs/ft_fdf_error.c \
+	  srcs/ft_fdf_reader.c \
 
 OBJ = $(SRC:%.c=%.o)
 MLX = -L/usr/local/lib/ -I/usr/local/include -lmlx -framework OpenGL -framework AppKit
