@@ -6,7 +6,7 @@
 #    By: nboste <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/12/08 23:43:17 by nboste            #+#    #+#              #
-#    Updated: 2016/12/09 01:07:13 by nboste           ###   ########.fr        #
+#    Updated: 2016/12/09 02:03:32 by nboste           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ MLX = -L/usr/local/lib/ -I/usr/local/include -lmlx -framework OpenGL -framework 
 all: $(NAME)
 
 $(NAME):
-	make -C ./libft fclean && make -C ./libft
+	make -C ./libft
 	$(CC) $(FLG) $(SRC) -I./includes/ -I./libft/includes -L./libft -lft $(MLX) -o $(NAME)
 
 clean:
