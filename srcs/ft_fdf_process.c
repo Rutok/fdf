@@ -1,34 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_fdf_reader.h                                    :+:      :+:    :+:   */
+/*   ft_fdf_process.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/12/09 03:14:27 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/09 05:44:04 by nboste           ###   ########.fr       */
+/*   Created: 2016/12/09 05:34:57 by nboste            #+#    #+#             */
+/*   Updated: 2016/12/09 05:41:18 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_FDF_READER_H
-# define FT_FDF_READER_H
+#include "ft_fdf_process.h"
+#include <math.h>
 
-typedef struct	s_point
+void	fdf_project_iso(t_map *map)
 {
 	int		x;
 	int		y;
-	int		z;
-	double	xp;
-	double	yp;
-}				t_point;
+	t_point	*point;
 
-typedef struct	s_map
-{
-	t_point	**points;
-	int		width;
-	int		height;
-}				t_map;
-
-t_map	*fdf_get_map(char *path);
-
-#endif
+	x = 0;
+	while (x < map->width)
+	{
+		y = 0;
+		while (y < map->height)
+		{
+			point = &map->points[x][y];
+			point->xp = (sqrt(2) / 2) * (point->x - point->y);
+			point->yp = (sqrt(2 / 3) * point->z) - ((1 / sqrt(6)) * (point->x + point->y));
+			y++;
+		}
+		x++;
+	}
+}

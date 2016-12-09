@@ -1,34 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_fdf_reader.h                                    :+:      :+:    :+:   */
+/*   ft_fdf_process.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/12/09 03:14:27 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/09 05:44:04 by nboste           ###   ########.fr       */
+/*   Created: 2016/12/09 05:32:32 by nboste            #+#    #+#             */
+/*   Updated: 2016/12/09 05:33:53 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_FDF_READER_H
-# define FT_FDF_READER_H
+#ifndef FT_FDF_PROCESS_H
+# define FT_FDF_PROCESS_H
 
-typedef struct	s_point
-{
-	int		x;
-	int		y;
-	int		z;
-	double	xp;
-	double	yp;
-}				t_point;
-
-typedef struct	s_map
-{
-	t_point	**points;
-	int		width;
-	int		height;
-}				t_map;
-
-t_map	*fdf_get_map(char *path);
+void	fdf_project_iso(t_map *map);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:20:26 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/09 05:02:50 by nboste           ###   ########.fr       */
+/*   Updated: 2016/12/09 05:16:29 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ static void	fdf_build_map(int fd, t_map *map)
 		map->height++;
 	}
 	fdf_fill_map(map, list);
+	// TODO: free list
 }
 t_map	*fdf_get_map(char *path)
 {
@@ -85,5 +86,6 @@ t_map	*fdf_get_map(char *path)
 	if (!(map = (t_map *)malloc(sizeof(t_map))))
 		fdf_exit("Could not allocate memory");
 	fdf_build_map(fd, map);
+	close(fd);
 	return (map);
 }
