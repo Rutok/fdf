@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 22:07:20 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/10 03:01:09 by nboste           ###   ########.fr       */
+/*   Updated: 2016/12/10 04:34:36 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,16 @@ static void	fdf_put_pixel_img(t_point *point, t_env *env)
 	int	x;
 	int	y;
 
-	i = 0;
-	x = floor(point->projected.x) * env->img.bpp / 8;
-	y = floor(point->projected.y) * env->img.line_size;
-	env->img.data[x + y + i++] = mlx_get_color_value(env->mlx, 255);
-	env->img.data[x + y + i++] = mlx_get_color_value(env->mlx, 255);
-	env->img.data[x + y + i++] = mlx_get_color_value(env->mlx, 255);
-	env->img.data[x + y + i++] = mlx_get_color_value(env->mlx, 0);
+	if (point->projected.x < env->win.size.x && point->projected.y < env->win.size.y)
+	{
+		i = 0;
+		x = floor(point->projected.x) * env->img.bpp / 8;
+		y = floor(point->projected.y) * env->img.line_size;
+		env->img.data[x + y + i++] = mlx_get_color_value(env->mlx, 255);
+		env->img.data[x + y + i++] = mlx_get_color_value(env->mlx, 255);
+		env->img.data[x + y + i++] = mlx_get_color_value(env->mlx, 255);
+		env->img.data[x + y + i++] = mlx_get_color_value(env->mlx, 0);
+	}
 }
 
 static void	fdf_normalize_point(t_point *point, t_env* env)
@@ -35,7 +38,7 @@ static void	fdf_normalize_point(t_point *point, t_env* env)
 
 	min = &env->map->min;
 	max = &env->map->max;
-	point->projected.x = ((point->projected.x - min->x) / (max->x - min->x)) * (env->win.size.x - 1);
+	point->projected.x = ((point->projected.x - min->y) / (max->y - min->y)) * (env->win.size.y - 1) - ((min->x - min->y) / (max->y - min->y) * (env->win.size.y - 1));
 	point->projected.y = ((point->projected.y - min->y) / (max->y - min->y)) * (env->win.size.y - 1);
 }
 
@@ -89,4 +92,8 @@ void	fdf_draw_img(t_env *env)
 void	fdf_display_img(t_env *env)
 {
 	mlx_put_image_to_window(env->mlx, env->win.mlx_win, env->img.mlx_img, 0, 0);
+	mlx_destroy_image(env->mlx, env->img.mlx_img);
+	if ((env->img.mlx_img = mlx_new_image(env->mlx, env->win.size.x, env->win.size.y)) == NULL)
+		fdf_exit("Could not allocate memory");
+	env->img.data = mlx_get_data_addr(env->img.mlx_img, &env->img.bpp, &env->img.line_size, &env->img.endian);
 }

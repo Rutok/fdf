@@ -6,14 +6,21 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/08 23:15:04 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/10 01:05:00 by nboste           ###   ########.fr       */
+/*   Updated: 2016/12/10 05:37:12 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_fdf.h"
 #include "ft_fdf_hooks.h"
+#include "ft_fdf_matrix.h"
 
-int		fdf_init(t_env *env, int width, int height)
+static void	fdf_init_matrix(t_env *env)
+{
+	env->matrix.rot_left = fdf_get_rotmat(1);
+	env->matrix.rot_right = fdf_get_rotmat(-1);
+}
+
+int			fdf_init(t_env *env, int width, int height)
 {
 	if ((env->mlx = mlx_init()) == NULL)
 		return (0);
@@ -25,13 +32,14 @@ int		fdf_init(t_env *env, int width, int height)
 	mlx_expose_hook(env->win.mlx_win, &fdf_expose_hook, (void *)env);
 	mlx_key_hook(env->win.mlx_win, &fdf_key_hook, (void *)env);
 	mlx_mouse_hook(env->win.mlx_win, &fdf_mouse_hook, (void *)env);
-/*	mlx_loop_hook(env->win.mlx_win, &fdf_loop_hook, (void *)env);*/
+//	mlx_loop_hook(env->win.mlx_win, &fdf_loop_hook, (void *)env);
 	env->win.size.x = width;
 	env->win.size.y = height;
+	fdf_init_matrix(env);
 	return (1);
 }
 
-int		fdf_loop(t_env *env)
+int			fdf_loop(t_env *env)
 {
 	mlx_loop(env->mlx);
 	return (0);

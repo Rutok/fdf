@@ -6,7 +6,7 @@
 #    By: nboste <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/12/08 23:43:17 by nboste            #+#    #+#              #
-#    Updated: 2016/12/10 01:26:04 by nboste           ###   ########.fr        #
+#    Updated: 2016/12/10 05:35:02 by nboste           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ SRC = srcs/main.c \
 	  srcs/ft_fdf_reader.c \
 	  srcs/ft_fdf_drawer.c \
 	  srcs/ft_fdf_process.c \
+	  srcs/ft_fdf_matrix.c \
 
 OBJ = $(SRC:%.c=%.o)
 MLX = -L/usr/local/lib/ -I/usr/local/include -lmlx -framework OpenGL -framework AppKit
