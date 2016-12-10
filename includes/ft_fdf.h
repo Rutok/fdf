@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/08 23:12:30 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/09 23:59:28 by nboste           ###   ########.fr       */
+/*   Updated: 2016/12/10 03:15:10 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct	s_env
 	t_win	win;
 	t_img	img;
 	t_map	*map;
+	char	*path;
 }				t_env;
 
 int				fdf_init(t_env *env, int width, int height);

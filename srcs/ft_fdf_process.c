@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 05:34:57 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/10 02:37:19 by nboste           ###   ########.fr       */
+/*   Updated: 2016/12/10 02:57:10 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ void	fdf_project_iso(t_map *map)
 		{
 			point = &map->points[y][x];
 			proj = &point->projected;
-			proj->x = (sqrt(2) / 2) * (point->x - point->y);
-			proj->y = (sqrt(2 / 3.0) * point->z) - ((1 / sqrt(6)) * (point->x + point->y));
+			proj->x = (sqrt(2) / 2.0) * (point->x - point->y);
+			proj->y = (sqrt(2 / 3.0) * -1 * point->z) - ((1.0 / sqrt(6)) * (point->x + point->y));
 			fdf_update_minmax(map, point);
 			y++;
 		}

@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:20:26 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/10 00:45:00 by nboste           ###   ########.fr       */
+/*   Updated: 2016/12/10 02:54:48 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static void	fdf_fill_map(t_map *map, t_list *list)
 
 	if (!(map->points = (t_point **)malloc(sizeof(t_point *) * map->height)))
 		fdf_exit("Cant allocate memory.");
-	y = map->height - 1;
+	y = 0;
 	while (list)
 	{
 		if (!(map->points[y] = (t_point *)malloc(sizeof(t_point) * map->width)))
@@ -42,7 +42,7 @@ static void	fdf_fill_map(t_map *map, t_list *list)
 			map->points[y][x].z = ft_atoi(((char **)list->content)[x]);
 			x++;
 		}
-		y--;
+		y++;
 		list = list->next;
 	}
 }
