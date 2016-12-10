@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/08 23:12:30 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/10 05:34:04 by nboste           ###   ########.fr       */
+/*   Updated: 2016/12/10 06:58:25 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ typedef struct	s_matrix
 {
 	double	**rot_left;
 	double	**rot_right;
+	double	**homo_in;
+	double	**homo_out;
 }				t_matrix;
 
 typedef struct	s_win

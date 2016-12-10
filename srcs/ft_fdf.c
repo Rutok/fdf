@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/08 23:15:04 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/10 05:37:12 by nboste           ###   ########.fr       */
+/*   Updated: 2016/12/10 07:00:41 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ static void	fdf_init_matrix(t_env *env)
 {
 	env->matrix.rot_left = fdf_get_rotmat(1);
 	env->matrix.rot_right = fdf_get_rotmat(-1);
+	env->matrix.homo_in = fdf_get_homo(1.2);
+	env->matrix.homo_out = fdf_get_homo(0.8);
 }
 
 int			fdf_init(t_env *env, int width, int height)

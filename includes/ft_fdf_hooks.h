@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/08 23:26:19 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/10 04:50:48 by nboste           ###   ########.fr       */
+/*   Updated: 2016/12/10 06:59:33 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # define ESCAPE 53
 # define LEFT 123
 # define RIGHT 124
+# define PLUS 24
+# define MINUS 27
 
 int		fdf_expose_hook(void *param);
 

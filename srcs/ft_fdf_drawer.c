@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 22:07:20 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/10 04:34:36 by nboste           ###   ########.fr       */
+/*   Updated: 2016/12/10 06:46:33 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@ static void	fdf_put_pixel_img(t_point *point, t_env *env)
 	int	x;
 	int	y;
 
-	if (point->projected.x < env->win.size.x && point->projected.y < env->win.size.y)
+	if (point->projected.x < env->win.size.x
+		&& point->projected.y < env->win.size.y
+		&& point->projected.x >= 0
+		&& point->projected.y >= 0)
 	{
 		i = 0;
 		x = floor(point->projected.x) * env->img.bpp / 8;
@@ -38,8 +41,8 @@ static void	fdf_normalize_point(t_point *point, t_env* env)
 
 	min = &env->map->min;
 	max = &env->map->max;
-	point->projected.x = ((point->projected.x - min->y) / (max->y - min->y)) * (env->win.size.y - 1) - ((min->x - min->y) / (max->y - min->y) * (env->win.size.y - 1));
-	point->projected.y = ((point->projected.y - min->y) / (max->y - min->y)) * (env->win.size.y - 1);
+	point->projected.x = ((((point->projected.x - min->x) / (max->x - min->x))) * (env->win.size.x - 1)) - ((min->x - min->x) / (max->x - min->x) * (env->win.size.x- 1));
+	point->projected.y = (((point->projected.y - min->x) / (max->x - min->x))) * (env->win.size.x - 1);
 }
 
 static void	fdf_draw_line(t_point* p1, t_point *p2, t_env *env)
