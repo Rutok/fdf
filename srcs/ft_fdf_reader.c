@@ -6,15 +6,11 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:20:26 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/09 05:16:29 by nboste           ###   ########.fr       */
+/*   Updated: 2016/12/10 00:45:00 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_fdf_reader.h"
-#include "ft_fdf_error.h"
-#include "libft.h"
-#include "get_next_line.h"
-#include <fcntl.h>
 
 static int	fdf_get_width(char **split)
 {
@@ -57,6 +53,8 @@ static void	fdf_build_map(int fd, t_map *map)
 	char	**split_line;
 	t_list	*list;
 
+	map->width = 0;
+	map->height = 0;
 	while (get_next_line(fd, &line) > 0)
 	{
 		split_line = ft_strsplit(line, ' ');
@@ -65,11 +63,13 @@ static void	fdf_build_map(int fd, t_map *map)
 		{
 			map->width = fdf_get_width(split_line);
 			list = ft_lstnew(&split_line, sizeof(char **));
+			list->content = (void *)split_line;
 		}
 		else
 		{
 			// TODO: check errors in file
 			ft_lstadd(&list, ft_lstnew(&split_line, sizeof(char **)));
+			list->content = (void *)split_line;
 		}
 		map->height++;
 	}
@@ -81,7 +81,7 @@ t_map	*fdf_get_map(char *path)
 	int		fd;
 	t_map	*map;
 
-	if ((fd = open(path, O_RDONLY)))
+	if ((fd = open(path, O_RDONLY)) < 0)
 		fdf_exit("The file can't be opened.");
 	if (!(map = (t_map *)malloc(sizeof(t_map))))
 		fdf_exit("Could not allocate memory");

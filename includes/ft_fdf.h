@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/08 23:12:30 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/09 00:00:17 by nboste           ###   ########.fr       */
+/*   Updated: 2016/12/09 23:59:28 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,31 @@
 # define FT_FDF_H
 
 #include <stdlib.h>
+#include "libft.h"
+#include "ft_fdf_reader.h"
 #include "mlx.h"
+
+typedef struct	s_win
+{
+	void	*mlx_win;
+	t_pair	size;
+}				t_win;
+
+typedef struct	s_img
+{
+	void	*mlx_img;
+	char	*data;
+	int		bpp;
+	int		line_size;
+	int		endian;
+}				t_img;
 
 typedef struct	s_env
 {
 	void	*mlx;
-	void	*win;
-	void	*img;
+	t_win	win;
+	t_img	img;
+	t_map	*map;
 }				t_env;
 
 int				fdf_init(t_env *env, int width, int height);

@@ -1,41 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_fdf_reader.h                                    :+:      :+:    :+:   */
+/*   ft_fdf_drawer.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/12/09 03:14:27 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/10 00:03:17 by nboste           ###   ########.fr       */
+/*   Created: 2016/12/09 22:07:52 by nboste            #+#    #+#             */
+/*   Updated: 2016/12/10 00:04:04 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_FDF_READER_H
-# define FT_FDF_READER_H
+#ifndef FT_FDF_DRAWER_H
+# define FT_FDF_DRAWER_H
 
-#include "ft_fdf_error.h"
 #include "libft.h"
-#include "get_next_line.h"
-#include <fcntl.h>
+#include "ft_fdf.h"
 
+void	fdf_draw_img(t_env *env);
 
-typedef struct	s_point
-{
-	int		x;
-	int		y;
-	int		z;
-	t_pair	projected;
-}				t_point;
-
-typedef struct	s_map
-{
-	t_point	**points;
-	int		width;
-	int		height;
-	t_pair	min;
-	t_pair	max;
-}				t_map;
-
-t_map	*fdf_get_map(char *path);
+void	fdf_display_img(t_env *env);
 
 #endif
