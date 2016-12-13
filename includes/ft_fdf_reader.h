@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:14:27 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/10 05:00:54 by nboste           ###   ########.fr       */
+/*   Updated: 2016/12/13 01:21:56 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,12 @@
 #include "get_next_line.h"
 #include <fcntl.h>
 
+typedef struct	s_color
+{
+	int	r;
+	int	g;
+	int	b;
+}				t_color;
 
 typedef struct	s_point
 {
@@ -25,6 +31,7 @@ typedef struct	s_point
 	double	y;
 	double	z;
 	t_pair	projected;
+	t_color	color;
 }				t_point;
 
 typedef struct	s_map

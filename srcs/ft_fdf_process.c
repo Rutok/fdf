@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 05:34:57 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/10 06:44:57 by nboste           ###   ########.fr       */
+/*   Updated: 2016/12/12 22:53:24 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,11 @@
 
 static void	fdf_update_minmax(t_map *map, t_point *point)
 {
+	static int call;
 	t_pair	*proj;
 
 	proj = &point->projected;
-	if (!point->x && !point->y)
+	if (!call)
 	{
 		map->min.x = proj->x;
 		map->min.y = proj->y;
@@ -32,6 +33,7 @@ static void	fdf_update_minmax(t_map *map, t_point *point)
 		map->max.x = proj->x > map->max.x ? proj->x : map->max.x;
 		map->max.y = proj->y > map->max.y ? proj->y : map->max.y;
 	}
+	call++;
 }
 
 void	fdf_apply_matrix(t_map *map, double **matrix)
@@ -81,4 +83,27 @@ void	fdf_project_iso(t_map *map)
 		x++;
 	}
 	t++;
+}
+
+void	fdf_translate(t_map *map, char dir, double step)
+{
+	int		x;
+	int		y;
+	t_point	*point;
+
+	x = 0;
+	while (x < map->width)
+	{
+		y = 0;
+		while (y < map->height)
+		{
+			point = &map->points[y][x];
+			if (dir == DIR_X)
+				point->x += step;
+			else
+				point->y += step;
+			y++;
+		}
+		x++;
+	}
 }

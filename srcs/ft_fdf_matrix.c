@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/10 05:16:33 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/10 06:58:06 by nboste           ###   ########.fr       */
+/*   Updated: 2016/12/13 02:21:04 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,12 @@
 #include "libft.h"
 #include "ft_fdf_error.h"
 
-double	**fdf_get_rotmat(int dir)
+double	**fdf_get_rotmat_z(double o)
 {
 	int		i;
 	double	**rotmat_left;
-	double	o;
 
-	o = ft_degtorad(dir);
+	o = ft_degtorad(o);
 	if (!(rotmat_left = (double **)malloc(sizeof(double *) * 3)))
 		fdf_exit("Could not allocate memory.");
 	i = 0;
@@ -38,6 +37,54 @@ double	**fdf_get_rotmat(int dir)
 	rotmat_left[2][0] = 0;
 	rotmat_left[2][1] = 0;
 	rotmat_left[2][2] = 1;
+	return (rotmat_left);
+}
+
+double	**fdf_get_rotmat_x(double o)
+{
+	int		i;
+	double	**rotmat_left;
+
+	o = ft_degtorad(o);
+	if (!(rotmat_left = (double **)malloc(sizeof(double *) * 3)))
+		fdf_exit("Could not allocate memory.");
+	i = 0;
+	while (i < 3)
+		if (!(rotmat_left[i++] = (double*)malloc(sizeof(double) * 3)))
+			fdf_exit("Mem");
+	rotmat_left[0][0] = 1;
+	rotmat_left[0][1] = 0;
+	rotmat_left[0][2] = 0;
+	rotmat_left[1][0] = 0;
+	rotmat_left[1][1] = cos(o);
+	rotmat_left[1][2] = sin(o);
+	rotmat_left[2][0] = 0;
+	rotmat_left[2][1] = -sin(o);
+	rotmat_left[2][2] = cos(o);
+	return (rotmat_left);
+}
+
+double	**fdf_get_rotmat_y(double o)
+{
+	int		i;
+	double	**rotmat_left;
+
+	o = ft_degtorad(o);
+	if (!(rotmat_left = (double **)malloc(sizeof(double *) * 3)))
+		fdf_exit("Could not allocate memory.");
+	i = 0;
+	while (i < 3)
+		if (!(rotmat_left[i++] = (double*)malloc(sizeof(double) * 3)))
+			fdf_exit("Mem");
+	rotmat_left[0][0] = cos(o);
+	rotmat_left[0][1] = 0;
+	rotmat_left[0][2] = -sin(o);
+	rotmat_left[1][0] = 0;
+	rotmat_left[1][1] = 1;
+	rotmat_left[1][2] = 0;
+	rotmat_left[2][0] = sin(o);
+	rotmat_left[2][1] = 0;
+	rotmat_left[2][2] = cos(o);
 	return (rotmat_left);
 }
 

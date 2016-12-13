@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:20:26 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/10 02:54:48 by nboste           ###   ########.fr       */
+/*   Updated: 2016/12/13 00:48:26 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,37 @@ static int	fdf_get_width(char **split)
 	while (*split++)
 		i++;
 	return (i);
+}
+
+static t_color	fdf_getcolor(char *str)
+{
+	char	*c;
+	int		val;
+	int		i;
+	t_color	color;
+
+	val = 0;
+	i = 0;
+	if ((c = ft_strchr(str, 'x')))
+	{
+		c++;
+		while (c[i] != '\0' && i < 6)
+		{
+			c[i] = ft_toupper(c[i]);
+			val = val << 4;
+			if (c[i] >= '0' && c[i] <= '9')
+				val += c[i] - '0';
+			else
+				val += 10 + c[i] - 'A';
+			i++;
+		}
+	}
+	else
+		val = 0x00FFFFFF;
+	color.r = val >> 16;
+	color.g = (val & 0xFF00) >> 8;
+	color.b = (val & 0xFF);
+	return (color);
 }
 
 static void	fdf_fill_map(t_map *map, t_list *list)
@@ -40,6 +71,7 @@ static void	fdf_fill_map(t_map *map, t_list *list)
 			map->points[y][x].x = x;
 			map->points[y][x].y = y;
 			map->points[y][x].z = ft_atoi(((char **)list->content)[x]);
+			map->points[y][x].color = fdf_getcolor(((char **)list->content)[x]);
 			x++;
 		}
 		y++;

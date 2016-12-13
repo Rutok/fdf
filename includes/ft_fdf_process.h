@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 05:32:32 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/10 05:39:35 by nboste           ###   ########.fr       */
+/*   Updated: 2016/12/12 22:18:45 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,13 @@
 #include "ft_fdf_reader.h"
 #include "libft.h"
 
+# define DIR_X 0
+# define DIR_Y 1
+
 void	fdf_project_iso(t_map *map);
 
 void	fdf_apply_matrix(t_map *map, double **matrix);
+
+void	fdf_translate(t_map *map, char dir, double step);
 
 #endif

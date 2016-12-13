@@ -6,18 +6,23 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/08 23:15:04 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/10 07:00:41 by nboste           ###   ########.fr       */
+/*   Updated: 2016/12/13 04:25:33 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_fdf.h"
 #include "ft_fdf_hooks.h"
 #include "ft_fdf_matrix.h"
+#include "X.h"
 
 static void	fdf_init_matrix(t_env *env)
 {
-	env->matrix.rot_left = fdf_get_rotmat(1);
-	env->matrix.rot_right = fdf_get_rotmat(-1);
+	env->matrix.rot_z_pos = fdf_get_rotmat_z(1);
+	env->matrix.rot_z_neg = fdf_get_rotmat_z(-1);
+	env->matrix.rot_x_pos = fdf_get_rotmat_x(1);
+	env->matrix.rot_x_neg = fdf_get_rotmat_x(-1);
+	env->matrix.rot_y_pos = fdf_get_rotmat_y(1);
+	env->matrix.rot_y_neg = fdf_get_rotmat_y(-1);
 	env->matrix.homo_in = fdf_get_homo(1.2);
 	env->matrix.homo_out = fdf_get_homo(0.8);
 }
@@ -32,7 +37,8 @@ int			fdf_init(t_env *env, int width, int height)
 		return (0);
 	env->img.data = mlx_get_data_addr(env->img.mlx_img, &env->img.bpp, &env->img.line_size, &env->img.endian);
 	mlx_expose_hook(env->win.mlx_win, &fdf_expose_hook, (void *)env);
-	mlx_key_hook(env->win.mlx_win, &fdf_key_hook, (void *)env);
+//	mlx_key_hook(env->win.mlx_win, &fdf_key_hook, (void *)env);
+	mlx_hook(env->win.mlx_win, KeyPress, KeyPressMask, &fdf_key_hook, (void *)env);
 	mlx_mouse_hook(env->win.mlx_win, &fdf_mouse_hook, (void *)env);
 //	mlx_loop_hook(env->win.mlx_win, &fdf_loop_hook, (void *)env);
 	env->win.size.x = width;
