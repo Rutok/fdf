@@ -6,20 +6,22 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/08 23:50:04 by nboste            #+#    #+#             */
-/*   Updated: 2016/12/13 01:57:19 by nboste           ###   ########.fr       */
+/*   Updated: 2017/01/09 16:56:09 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_fdf.h"
-#include "libft.h"
+#include "engine.h"
+#include "fdf.h"
 
 int		main(int argc, char **argv)
 {
 	t_env	env;
 
-	if (argc < 2 || !fdf_init(&env, 1920, 1080))
-		return (1);
-	env.path = argv[1];
-	fdf_loop(&env);
-	return (0);
+	env.app.argc = argc;
+	env.app.argv = argv;
+	env.win.name = ft_strdup("fdf");
+	env.win.size.x = 1440;
+	env.win.size.y = 720;
+	engine_init(&env, &init_app, &process_app, NULL);
+	return (engine_run(&env));
 }

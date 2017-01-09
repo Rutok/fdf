@@ -1,3 +1,6 @@
 [submodule "libft"]
 	path = libft
 	url = https://github.com/Rutok/libft.git
+[submodule "engine"]
+	path = engine
+	url = https://github.com/Rutok/engine.git
