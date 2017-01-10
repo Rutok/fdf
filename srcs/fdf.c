@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 16:59:28 by nboste            #+#    #+#             */
-/*   Updated: 2017/01/09 19:42:31 by nboste           ###   ########.fr       */
+/*   Updated: 2017/01/10 12:31:32 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,26 @@
 #include "fdf_drawer.h"
 #include "drawer.h"
 #include "fdf_event.h"
+
+#define APP_FPS 600
+
+static void	print_fps(void)
+{
+	static int time;
+	static int fps;
+
+	fps++;
+	if (!time)
+		time = SDL_GetTicks();
+	if (SDL_GetTicks() >= (Uint32)time + 1000)
+	{
+		ft_putstr("FPS : ");
+		ft_putnbr(fps);
+		ft_putchar('\n');
+		fps = 0;
+		time = SDL_GetTicks();
+	}
+}
 
 static void		init_matrix(t_fdf *fdf)
 {
@@ -48,6 +68,8 @@ int		process_app(void *venv)
 {
 	t_env	*env;
 	t_fdf	*fdf;
+	int		time;
+	int		etime;
 
 	env = (t_env *)venv;
 	fdf = (t_fdf *)env->app.d;
@@ -56,15 +78,22 @@ int		process_app(void *venv)
 	fdf_draw_img(env);
 	env->event.draw = 1;
 	drawer_wait_copy(env);
+	drawer_clean(&env->rend);
+	time = SDL_GetTicks();
 	while (!env->event.exit)
 	{
+		etime = SDL_GetTicks() - time;
+		if (etime < 1000 / APP_FPS)
+			SDL_Delay((1000 / APP_FPS) - etime);
+		time = SDL_GetTicks();
+		print_fps();
 		fdf_events(env);
 		if (fdf->to_draw)
 		{
+			env->event.draw = 1;
 			fdf_project_iso(fdf->map);
 			fdf_normalize_points(env);
 			fdf_draw_img(env);
-			env->event.draw = 1;
 			drawer_wait_copy(env);
 			drawer_clean(&env->rend);
 			fdf->to_draw = 0;

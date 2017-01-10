@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 18:18:34 by nboste            #+#    #+#             */
-/*   Updated: 2017/01/09 19:45:29 by nboste           ###   ########.fr       */
+/*   Updated: 2017/01/10 12:20:16 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	fdf_events(t_env *env)
 
 	ev = &env->event;
 	fdf = (t_fdf *)env->app.d;
+	while (ev->in_use) {SDL_Delay(2);}
+	ev->in_use = 1;
 	if (ev->move_left)
 		fdf_apply_matrix(fdf->map, fdf->matrix.rot_z_pos);
 	if (ev->move_right)
@@ -53,6 +55,6 @@ void	fdf_events(t_env *env)
 		fdf_apply_matrix(fdf->map, fdf->matrix.homo_out);
 	if (event_to_process(ev))
 		fdf->to_draw = 1;
-	if (fdf->to_draw == 1)
 	reset_event(ev);
+	ev->in_use = 0;
 }
