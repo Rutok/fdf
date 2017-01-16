@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 22:07:20 by nboste            #+#    #+#             */
-/*   Updated: 2017/01/09 18:28:54 by nboste           ###   ########.fr       */
+/*   Updated: 2017/01/16 22:47:33 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 
 static void	fdf_put_pixel_img(t_point *point, t_env *env)
 {
-	int	i;
 	t_2ipair	p;
 	uint32		color;
 
@@ -25,7 +24,6 @@ static void	fdf_put_pixel_img(t_point *point, t_env *env)
 			&& point->projected.x >= 0
 			&& point->projected.y >= 0)
 	{
-		i = 0;
 		p.x = floor(point->projected.x);
 		p.y = floor(point->projected.y);
 		color = point->color.r;
