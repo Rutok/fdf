@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 18:18:34 by nboste            #+#    #+#             */
-/*   Updated: 2017/01/10 12:20:16 by nboste           ###   ########.fr       */
+/*   Updated: 2017/01/17 02:43:06 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,22 @@
 
 static int	event_to_process(t_event *ev)
 {
-	if (ev->move_left || ev->move_right || ev->move_up
-			|| ev->move_down || ev->plus || ev->minus)
+	if (ev->key_nav.keys[KEY_LEFT]
+		|| ev->key_nav.keys[KEY_RIGHT] || ev->key_nav.keys[KEY_UP]
+		|| ev->key_nav.keys[KEY_DOWN] || ev->key_pad.keys[KEY_KP_PLUS]
+		|| ev->key_pad.keys[KEY_KP_MINUS])
 		return (1);
 	return (0);
 }
 
 static void	reset_event(t_event *ev)
 {
-	ev->move_left = 0;
-	ev->move_right = 0;
-	ev->move_up = 0;
-	ev->move_down = 0;
-	ev->plus = 0;
-	ev->minus = 0;
+	ev->key_nav.keys[KEY_LEFT] = 0;
+	ev->key_nav.keys[KEY_RIGHT] = 0;
+	ev->key_nav.keys[KEY_UP] = 0;
+	ev->key_nav.keys[KEY_DOWN] = 0;
+	ev->key_pad.keys[KEY_KP_PLUS] = 0;
+	ev->key_pad.keys[KEY_KP_MINUS] = 0;
 }
 
 void	fdf_events(t_env *env)
@@ -41,17 +43,17 @@ void	fdf_events(t_env *env)
 	fdf = (t_fdf *)env->app.d;
 	while (ev->in_use) {SDL_Delay(2);}
 	ev->in_use = 1;
-	if (ev->move_left)
+	if (ev->key_nav.keys[KEY_LEFT])
 		fdf_apply_matrix(fdf->map, fdf->matrix.rot_z_pos);
-	if (ev->move_right)
+	if (ev->key_nav.keys[KEY_RIGHT])
 		fdf_apply_matrix(fdf->map, fdf->matrix.rot_z_neg);
-	if (ev->move_up)
+	if (ev->key_nav.keys[KEY_UP])
 		fdf_apply_matrix(fdf->map, fdf->matrix.rot_x_pos);
-	if (ev->move_down)
+	if (ev->key_nav.keys[KEY_DOWN])
 		fdf_apply_matrix(fdf->map, fdf->matrix.rot_x_neg);
-	if (ev->plus)
+	if (ev->key_pad.keys[KEY_KP_PLUS])
 		fdf_apply_matrix(fdf->map, fdf->matrix.homo_in);
-	if (ev->minus)
+	if (ev->key_pad.keys[KEY_KP_MINUS])
 		fdf_apply_matrix(fdf->map, fdf->matrix.homo_out);
 	if (event_to_process(ev))
 		fdf->to_draw = 1;
