@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/10 05:16:33 by nboste            #+#    #+#             */
-/*   Updated: 2017/01/09 18:31:01 by nboste           ###   ########.fr       */
+/*   Updated: 2017/01/17 04:40:38 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include "libft.h"
-#include "ft_fdf_error.h"
 #include "error.h"
 
 double	**fdf_get_rotmat_z(double o)
