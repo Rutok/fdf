@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:14:27 by nboste            #+#    #+#             */
-/*   Updated: 2017/01/09 18:32:32 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/07 01:17:17 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,7 @@
 #include "libft.h"
 #include "get_next_line.h"
 #include <fcntl.h>
-
-typedef struct	s_color
-{
-	double	r;
-	double	g;
-	double	b;
-}				t_color;
+#include "types.h"
 
 typedef struct	s_point
 {
