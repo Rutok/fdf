@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 16:59:28 by nboste            #+#    #+#             */
-/*   Updated: 2017/01/10 12:31:32 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/08 03:48:56 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "fdf_drawer.h"
 #include "drawer.h"
 #include "fdf_event.h"
+#include "camera.h"
 
 #define APP_FPS 600
 
@@ -53,6 +54,7 @@ static void		init_matrix(t_fdf *fdf)
 void	init_app(t_env *env)
 {
 	t_fdf	*fdf;
+	t_camera	*cam;
 
 	if(!(env->app.d = (void *)malloc(sizeof(t_fdf))))
 		ft_exit(MALLOC_FAILED);
@@ -62,6 +64,20 @@ void	init_app(t_env *env)
 	fdf->to_draw = 0;
 	fdf_translate(fdf->map, DIR_Y, -fdf->map->height / 2);
 	fdf_translate(fdf->map, DIR_X, -fdf->map->width / 2);
+	cam = &fdf->scene.camera;
+	cam->pos.x = 0;
+	cam->pos.y = 0;
+	cam->pos.z = 15;
+	cam->n.x = 0;
+	cam->n.y = 0;
+	cam->n.z = -1;
+	cam->v.x = 0;
+	cam->v.y = -1;
+	cam->v.z = 0;
+	cam->u.x = 1;
+	cam->u.y = 0;
+	cam->u.z = 0;
+	init_camera(env, ft_degtorad(135), &fdf->scene.camera);
 }
 
 int		process_app(void *venv)
@@ -73,12 +89,6 @@ int		process_app(void *venv)
 
 	env = (t_env *)venv;
 	fdf = (t_fdf *)env->app.d;
-	fdf_project_iso(fdf->map);
-	fdf_normalize_points(env);
-	fdf_draw_img(env);
-	env->event.draw = 1;
-	drawer_wait_copy(env);
-	drawer_clean(&env->rend);
 	time = SDL_GetTicks();
 	while (!env->event.exit)
 	{
@@ -91,8 +101,6 @@ int		process_app(void *venv)
 		if (fdf->to_draw)
 		{
 			env->event.draw = 1;
-			fdf_project_iso(fdf->map);
-			fdf_normalize_points(env);
 			fdf_draw_img(env);
 			drawer_wait_copy(env);
 			drawer_clean(&env->rend);

@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 16:59:40 by nboste            #+#    #+#             */
-/*   Updated: 2017/01/09 18:39:16 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/08 01:02:35 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct		s_fdf
 	t_matrix		matrix;
 	t_map			*map;
 	t_bool			to_draw;
+	t_scene			scene;
 }					t_fdf;
 
 void	init_app(t_env *env);
