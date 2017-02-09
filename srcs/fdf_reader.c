@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:20:26 by nboste            #+#    #+#             */
-/*   Updated: 2017/01/09 18:32:58 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/09 05:35:25 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ static void	fdf_fill_map(t_map *map, t_list *list)
 		x = 0;
 		while (x < map->width)
 		{
-			map->points[y][x].x = x;
-			map->points[y][x].y = y;
+			map->points[y][x].x = x * 10;
+			map->points[y][x].y = y * 10;
 			map->points[y][x].z = ft_atoi(((char **)list->content)[x]);
 			map->points[y][x].color = fdf_getcolor(((char **)list->content)[x]);
 			x++;

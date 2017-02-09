@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/08 23:50:04 by nboste            #+#    #+#             */
-/*   Updated: 2017/01/09 16:56:09 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/09 00:56:39 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int		main(int argc, char **argv)
 	env.app.argv = argv;
 	env.win.name = ft_strdup("fdf");
 	env.win.size.x = 1440;
-	env.win.size.y = 720;
+	env.win.size.y = 1440;
 	engine_init(&env, &init_app, &process_app, NULL);
 	return (engine_run(&env));
 }

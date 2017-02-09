@@ -6,35 +6,12 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 05:34:57 by nboste            #+#    #+#             */
-/*   Updated: 2017/01/09 18:16:50 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/09 01:13:39 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf_process.h"
 #include <math.h>
-
-static void	fdf_update_minmax(t_map *map, t_point *point)
-{
-	static int call;
-	t_2dpair	*proj;
-
-	proj = &point->projected;
-	if (!call)
-	{
-		map->min.x = proj->x;
-		map->min.y = proj->y;
-		map->max.x = proj->x;
-		map->max.y = proj->y;
-	}
-	else
-	{
-		map->min.x = proj->x < map->min.x ? proj->x : map->min.x;
-		map->min.y = proj->y < map->min.y ? proj->y : map->min.y;
-		map->max.x = proj->x > map->max.x ? proj->x : map->max.x;
-		map->max.y = proj->y > map->max.y ? proj->y : map->max.y;
-	}
-	call++;
-}
 
 void	fdf_apply_matrix(t_map *map, double **matrix)
 {
@@ -58,7 +35,7 @@ void	fdf_apply_matrix(t_map *map, double **matrix)
 	}
 }
 
-void	fdf_project_iso(t_map *map)
+/*void	fdf_project_iso(t_map *map)
 {
 	static int	t;
 	int		x;
@@ -114,7 +91,7 @@ void	fdf_project_para(t_map *map)
 		x++;
 	}
 	t++;
-}
+}*/
 
 void	fdf_translate(t_map *map, char dir, double step)
 {

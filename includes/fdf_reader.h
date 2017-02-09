@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:14:27 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/07 01:17:17 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/09 01:54:22 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef struct	s_point
 	double	y;
 	double	z;
 	t_2dpair	projected;
+	double		d;
 	t_color	color;
 }				t_point;
 

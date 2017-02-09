@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 16:59:28 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/08 03:48:56 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/09 05:36:58 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,12 @@ void	init_app(t_env *env)
 	init_matrix(fdf);
 	fdf->map = fdf_get_map(env->app.argv[1]);
 	fdf->to_draw = 0;
-	fdf_translate(fdf->map, DIR_Y, -fdf->map->height / 2);
-	fdf_translate(fdf->map, DIR_X, -fdf->map->width / 2);
+	fdf_translate(fdf->map, DIR_Y, -fdf->map->height * 10 / 2);
+	fdf_translate(fdf->map, DIR_X, -fdf->map->width * 10 / 2);
 	cam = &fdf->scene.camera;
 	cam->pos.x = 0;
 	cam->pos.y = 0;
-	cam->pos.z = 15;
+	cam->pos.z = 150;
 	cam->n.x = 0;
 	cam->n.y = 0;
 	cam->n.z = -1;
@@ -90,6 +90,10 @@ int		process_app(void *venv)
 	env = (t_env *)venv;
 	fdf = (t_fdf *)env->app.d;
 	time = SDL_GetTicks();
+	env->event.draw = 1;
+	fdf_draw_img(env);
+	drawer_wait_copy(env);
+	drawer_clean(&env->rend);
 	while (!env->event.exit)
 	{
 		etime = SDL_GetTicks() - time;
