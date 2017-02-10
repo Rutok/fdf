@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:14:27 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/09 01:54:22 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/10 02:08:34 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,18 @@
 
 typedef struct	s_point
 {
-	double	x;
-	double	y;
-	double	z;
-	t_2dpair	projected;
+	t_3dvertex	pos;
+	t_3dvertex	c_space;
+	t_2dpair	c_view;
 	double		d;
-	t_color	color;
+	t_color		color;
 }				t_point;
 
 typedef struct	s_map
 {
-	t_point	**points;
-	int		width;
-	int		height;
+	t_point		**points;
+	int			width;
+	int			height;
 	t_2ipair	min;
 	t_2ipair	max;
 }				t_map;

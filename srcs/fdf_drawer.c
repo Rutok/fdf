@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 22:07:20 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/09 02:18:29 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/10 06:18:48 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,22 @@
 
 static void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
 {
-	int		step;
+	int			step;
 	t_2dpair	d;
 	t_2dpair	incr;
-	t_point	point;
-	t_color	color_step;
+	t_point		point;
+	t_color		color_step;
+	t_2dpair	z_step;
 
-	d.x = p2->projected.x - p1->projected.x;
-	d.y = p2->projected.y - p1->projected.y;
+	d.x = p2->c_view.x - p1->c_view.x;
+	d.y = p2->c_view.y - p1->c_view.y;
 	step = fabs(d.x) > fabs(d.y) ? fabs(d.x) : fabs(d.y);
+	z_step.x = p2->c_space.z - p1->c_space.z;
 	if (step)
 	{
 		incr.x = d.x / (float)step;
 		incr.y = d.y / (float)step;
+		z_step.y = z_step.x / (float)step;
 		d.x = 0;
 		point = *p1;
 		color_step.r = (p2->color.r - p1->color.r) / step;
@@ -39,57 +42,59 @@ static void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
 		color_step.b = (p2->color.b - p1->color.b) / step;
 		while (d.x++ < step)
 		{
-			point.projected.x += incr.x;
-			point.projected.y += incr.y;
+			point.c_view.x += incr.x;
+			point.c_view.y += incr.y;
+			point.c_space.z += z_step.y;
 			point.color.r += color_step.r;
 			point.color.g += color_step.g;
 			point.color.b += color_step.b;
-			if (round(point.projected.x) < cam->size.x && round(point.projected.y) < cam->size.y && point.projected.x >= 0 && point.projected.y >= 0)
+			if (point.c_space.z <= cam->d)
+				return;
+			if (point.c_space.z > cam->d && round(point.c_view.x) < cam->size.x && round(point.c_view.y) < cam->size.y && point.c_view.x >= 0 && point.c_view.y >= 0)
 			{
-				cam->pixels[(int)round(point.projected.y)][(int)round(point.projected.x)].color = point.color;
-				cam->pixels[(int)round(point.projected.y)][(int)round(point.projected.x)].z_buffer = 1;
+				cam->pixels[(int)(point.c_view.y)][(int)(point.c_view.x)].color = point.color;
+				cam->pixels[(int)(point.c_view.y)][(int)(point.c_view.x)].z_buffer = point.d;
 			}
 		}
 	}
 }
 
-static void	fdf_put_pixel_img(t_2dpair *o, t_2ipair coord, t_point **points, t_camera *cam, t_3dvertex v)
+static void	fdf_draw_point(t_2ipair coord, t_point **points, t_camera *cam)
 {
 	t_2ipair	p;
 	double		d;
 	t_color		*c;
+	t_point		*point;
 
 	c = &points[coord.y][coord.x].color;
-	p.x = round(((o->x + cam->ratio) * cam->size.x)  / (2 * cam->ratio));
-	p.y = round(((o->y + 1) * cam->size.y)  / (2));
-	points[coord.y][coord.x].projected.x = p.x;
-	points[coord.y][coord.x].projected.y = p.y;
-	d = sqrt((v.x * v.x) + (v.y * v.y) + (v.z * v.z));
-	points[coord.y][coord.x].d = d;
-	if (p.x < cam->size.x
-			&& p.y < cam->size.y
-			&& p.x >= 0
-			&& p.y >= 0)
+	point = &points[coord.y][coord.x];
+	p.x = round(((point->c_view.x + cam->ratio) * cam->size.x)  / (2 * cam->ratio));
+	p.y = round(((point->c_view.y + 1) * cam->size.y)  / (2));
+	point->c_view.x = p.x;
+	point->c_view.y = p.y;
+	d = sqrt((point->c_space.x * point->c_space.x) + (point->c_space.y * point->c_space.y) + (point->c_space.z * point->c_space.z));
+	point->d = d;
+	if (p.x < cam->size.x && p.y < cam->size.y && p.x >= 0 && p.y >= 0)
 	{
-		if (cam->pixels[p.y][p.x].z_buffer == -1 || d < cam->pixels[p.y][p.x].z_buffer)
+		if (point->c_space.z > cam->d && (cam->pixels[p.y][p.x].z_buffer == -1 || d < cam->pixels[p.y][p.x].z_buffer))
 		{
 			cam->pixels[p.y][p.x].color = *c;
 			cam->pixels[p.y][p.x].z_buffer = d;
 		}
 	}
 	if (coord.x > 0)
-		fdf_draw_line(&points[coord.y][coord.x], &points[coord.y][coord.x - 1], cam);
+		fdf_draw_line(point, &points[coord.y][coord.x - 1], cam);
 	if (coord.y > 0)
-		fdf_draw_line(&points[coord.y][coord.x], &points[coord.y - 1][coord.x], cam);
+		fdf_draw_line(point, &points[coord.y - 1][coord.x], cam);
 }
 
 void	fdf_draw_img(t_env *env)
 {
-	t_fdf	*fdf;
+	t_fdf		*fdf;
 	t_camera	*cam;
 	t_2ipair	c;
 	t_3dvertex	v;
-	t_2dpair		p;
+	t_point		*p;
 
 	fdf = (t_fdf *)env->app.d;
 	cam = &fdf->scene.camera;
@@ -100,15 +105,11 @@ void	fdf_draw_img(t_env *env)
 		c.x = 0;
 		while (c.x < fdf->map->width)
 		{
-			v.x = fdf->map->points[c.y][c.x].x;
-			v.y = fdf->map->points[c.y][c.x].y;
-			v.z = fdf->map->points[c.y][c.x].z;
-			to_camera_space(&v, cam);
-			if (v.z > cam->d)
-			{
-				p = camera_project_vertex(&v, cam);
-				fdf_put_pixel_img(&p, c, fdf->map->points, cam, v);
-			}
+			p = &fdf->map->points[c.y][c.x];
+			v = p->pos;
+			p->c_space = to_camera_space(&v, cam);
+			p->c_view = camera_project_vertex(&p->c_space, cam);
+			fdf_draw_point(c, fdf->map->points, cam);
 			c.x++;
 		}
 		c.y++;

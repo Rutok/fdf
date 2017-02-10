@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 16:59:28 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/09 05:36:58 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/10 03:56:06 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include "fdf_event.h"
 #include "camera.h"
 
-#define APP_FPS 600
+#define APP_FPS 6000
 
 static void	print_fps(void)
 {
@@ -53,7 +53,7 @@ static void		init_matrix(t_fdf *fdf)
 
 void	init_app(t_env *env)
 {
-	t_fdf	*fdf;
+	t_fdf		*fdf;
 	t_camera	*cam;
 
 	if(!(env->app.d = (void *)malloc(sizeof(t_fdf))))
@@ -65,6 +65,7 @@ void	init_app(t_env *env)
 	fdf_translate(fdf->map, DIR_Y, -fdf->map->height * 10 / 2);
 	fdf_translate(fdf->map, DIR_X, -fdf->map->width * 10 / 2);
 	cam = &fdf->scene.camera;
+	init_camera(env, ft_degtorad(135), &fdf->scene.camera);
 	cam->pos.x = 0;
 	cam->pos.y = 0;
 	cam->pos.z = 150;
@@ -77,7 +78,6 @@ void	init_app(t_env *env)
 	cam->u.x = 1;
 	cam->u.y = 0;
 	cam->u.z = 0;
-	init_camera(env, ft_degtorad(135), &fdf->scene.camera);
 }
 
 int		process_app(void *venv)
