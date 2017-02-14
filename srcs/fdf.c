@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 16:59:28 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/10 03:56:06 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/14 05:49:36 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,14 +70,16 @@ void	init_app(t_env *env)
 	cam->pos.y = 0;
 	cam->pos.z = 150;
 	cam->n.x = 0;
-	cam->n.y = 0;
-	cam->n.z = -1;
+	cam->n.y = 1;
+	cam->n.z = 0;
 	cam->v.x = 0;
-	cam->v.y = -1;
-	cam->v.z = 0;
+	cam->v.y = 0;
+	cam->v.z = -1;
 	cam->u.x = 1;
 	cam->u.y = 0;
 	cam->u.z = 0;
+	cam->speed = 15;
+	cam->sensitivity = .02;
 }
 
 int		process_app(void *venv)
