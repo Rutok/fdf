@@ -6,14 +6,14 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 18:18:34 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/14 05:48:56 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/15 21:34:23 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf_event.h"
 #include "fdf.h"
 #include "fdf_process.h"
-#include "SDL.h"
+#include <SDL2/SDL.h>
 
 static int	event_to_process(t_event *ev)
 {
@@ -45,18 +45,21 @@ static void	reset_event(t_event *ev)
 static void	rotate_3dvertex(t_3dvertex *v, t_3dvertex n, double a)
 {
 	t_3dvertex	tmp;
+	t_2dpair	trig;
 
 	if (!a)
 		return;
-	tmp.x = ((cos(a) + ((1 - cos(a)) * n.x * n.x)) * v->x)
-		+ ((((1 - cos(a)) * n.x * n.y) - (sin(a) * n.z)) * v->y)
-		+ ((((1 - cos(a)) * n.x * n.z) + (sin(a) * n.y)) * v->z);
-	tmp.y = ((((1 - cos(a)) * n.x * n.y) + (sin(a) * n.z)) * v->x)
-		+ ((cos(a) + ((1 - cos(a)) * n.y * n.y)) * v->y)
-		+ ((((1 - cos(a)) * n.y * n.z) - (sin(a) * n.x)) * v->z);
-	tmp.z = ((((1 - cos(a)) * n.x * n.z) - (sin(a) * n.y)) * v->x)
-		+ ((((1 - cos(a)) * n.y * n.z) + (sin(a) * n.x)) * v->y)
-		+ ((cos(a) + ((1 - cos(a)) * n.z * n.z)) * v->z);
+	trig.x = cos(a);
+	trig.y = sin(a);
+	tmp.x = ((trig.x + ((1 - trig.x) * n.x * n.x)) * v->x)
+		+ ((((1 - trig.x) * n.x * n.y) - (trig.y * n.z)) * v->y)
+		+ ((((1 - trig.x) * n.x * n.z) + (trig.y * n.y)) * v->z);
+	tmp.y = ((((1 - trig.x) * n.x * n.y) + (trig.y * n.z)) * v->x)
+		+ ((trig.x + ((1 - trig.x) * n.y * n.y)) * v->y)
+		+ ((((1 - trig.x) * n.y * n.z) - (trig.y * n.x)) * v->z);
+	tmp.z = ((((1 - trig.x) * n.x * n.z) - (trig.y * n.y)) * v->x)
+		+ ((((1 - trig.x) * n.y * n.z) + (trig.y * n.x)) * v->y)
+		+ ((trig.x + ((1 - trig.x) * n.z * n.z)) * v->z);
 	*v = tmp;
 }
 
@@ -111,17 +114,24 @@ void	fdf_events(t_env *env)
 	}
 	if (ev->mouse.move)
 	{
-		t_2ipair	d;
-
+		t_2dpair	d;
+		t_3dvertex	z;
+		z.x = 0;
+		z.y = 0;
+		z.z = 1;
 		d.x = ev->mouse.pos.x - (cam->size.x / 2);
 		d.y = ev->mouse.pos.y - (cam->size.y / 2);
-		d.x *= cam->sensitivity;
-		d.y *= cam->sensitivity;
-		rotate_3dvertex(&cam->u, cam->v, d.x);
-		rotate_3dvertex(&cam->n, cam->v, d.x);
-		rotate_3dvertex(&cam->n, cam->u, d.y);
-		rotate_3dvertex(&cam->v, cam->u, d.y);
+		if (d.x != 0 && d.y != 0)
+		{
+		d.x *= -cam->sensitivity;
+		d.y *= -cam->sensitivity;
+		rotate_3dvertex(&cam->u, z, ft_degtorad(d.x));
+		rotate_3dvertex(&cam->n, z, ft_degtorad(d.x));
+		rotate_3dvertex(&cam->v, z, ft_degtorad(d.x));
+		rotate_3dvertex(&cam->n, cam->u, ft_degtorad(d.y));
+		rotate_3dvertex(&cam->v, cam->u, ft_degtorad(d.y));
 		SDL_WarpMouseInWindow(NULL, cam->size.x / 2, cam->size.y / 2);
+		}
 	}
 	if (event_to_process(ev))
 		fdf->to_draw = 1;
