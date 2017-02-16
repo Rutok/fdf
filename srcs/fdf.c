@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 16:59:28 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/15 05:19:07 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/16 00:05:13 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void	init_app(t_env *env)
 	fdf_translate(fdf->map, DIR_X, -fdf->map->width * 10 / 2);
 	cam = &fdf->scene.camera;
 	init_camera(env, ft_degtorad(135), &fdf->scene.camera);
+	SDL_SetWindowGrab(env->win.win_sdl, SDL_TRUE);
 	SDL_WarpMouseInWindow(NULL, cam->size.x / 2, cam->size.y / 2);
 	cam->pos.x = 0;
 	cam->pos.y = 0;
@@ -79,11 +80,9 @@ void	init_app(t_env *env)
 	cam->u.x = 1;
 	cam->u.y = 0;
 	cam->u.z = 0;
-	cam->speed = 15;
-	cam->sensitivity = 0.04;
+	cam->speed = 1;
+	cam->sensitivity = 0.1;
 	SDL_ShowCursor(SDL_DISABLE);
-//	SDL_SetRelativeMouseMode(SDL_TRUE);
-	SDL_SetWindowGrab(env->win.win_sdl, SDL_TRUE);
 }
 
 int		process_app(void *venv)
@@ -101,7 +100,7 @@ int		process_app(void *venv)
 	drawer_wait_copy(env);
 	drawer_clean(&env->rend);
 	env->event.mouse.move = 0;
-		print_fps();
+	print_fps();
 	while (!env->event.exit)
 	{
 		etime = SDL_GetTicks() - time;

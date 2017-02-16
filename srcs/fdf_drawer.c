@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 22:07:20 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/14 05:16:33 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/15 23:44:22 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static void	fdf_draw_point(t_2ipair coord, t_point **points, t_camera *cam)
 	p.y = round(((point->c_view.y + 1) * cam->size.y)  / (2));
 	point->c_view.x = p.x;
 	point->c_view.y = p.y;
-	d = sqrt((point->c_space.x * point->c_space.x) + (point->c_space.y * point->c_space.y) + (point->c_space.z * point->c_space.z));
+	d = (point->c_space.x * point->c_space.x) + (point->c_space.y * point->c_space.y) + (point->c_space.z * point->c_space.z);
 	point->d = d;
 	if (p.x < cam->size.x && p.y < cam->size.y && p.x >= 0 && p.y >= 0 && point->c_space.z > 0)
 	{

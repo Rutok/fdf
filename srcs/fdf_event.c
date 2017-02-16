@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 18:18:34 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/15 21:34:23 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/16 00:11:37 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void	fdf_events(t_env *env)
 	t_event		*ev;
 	t_fdf		*fdf;
 	t_camera	*cam;
+	static int tmp;
 
 	ev = &env->event;
 	fdf = (t_fdf *)env->app.d;
@@ -114,6 +115,8 @@ void	fdf_events(t_env *env)
 	}
 	if (ev->mouse.move)
 	{
+		if (tmp)
+		{
 		t_2dpair	d;
 		t_3dvertex	z;
 		z.x = 0;
@@ -132,6 +135,10 @@ void	fdf_events(t_env *env)
 		rotate_3dvertex(&cam->v, cam->u, ft_degtorad(d.y));
 		SDL_WarpMouseInWindow(NULL, cam->size.x / 2, cam->size.y / 2);
 		}
+		}
+		else
+			SDL_WarpMouseInWindow(NULL, cam->size.x / 2, cam->size.y / 2);
+		tmp++;
 	}
 	if (event_to_process(ev))
 		fdf->to_draw = 1;
