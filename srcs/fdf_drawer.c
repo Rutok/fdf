@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 22:07:20 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/16 04:34:56 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/16 07:57:53 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "camera.h"
 #include <stdio.h>
 #include "color.h"
+#include "filters.h"
 
 static void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
 {
@@ -157,10 +158,10 @@ static void	fdf_draw_point(t_2ipair coord, t_point **points, t_camera *cam)
 {
 	t_2ipair	p;
 	double		d;
-	t_color		*c;
+//	t_color		*c;
 	t_point		*point;
 
-	c = &points[coord.y][coord.x].color;
+//	c = &points[coord.y][coord.x].color;
 	point = &points[coord.y][coord.x];
 	p.x = round(((point->c_view.x + cam->ratio) * cam->size.x)  / (2 * cam->ratio));
 	p.y = round(((point->c_view.y + 1) * cam->size.y)  / (2));
@@ -168,14 +169,14 @@ static void	fdf_draw_point(t_2ipair coord, t_point **points, t_camera *cam)
 	point->c_view.y = p.y;
 	d = (point->c_space.x * point->c_space.x) + (point->c_space.y * point->c_space.y) + (point->c_space.z * point->c_space.z);
 	point->d = d;
-	if (p.x < cam->size.x && p.y < cam->size.y && p.x >= 0 && p.y >= 0)
+/*	if (p.x < cam->size.x && p.y < cam->size.y && p.x >= 0 && p.y >= 0)
 	{
 		if (point->c_space.z > cam->d && (cam->pixels[p.y][p.x].z_buffer == -1 || d < cam->pixels[p.y][p.x].z_buffer))
 		{
 			cam->pixels[p.y][p.x].color = *c;
 			cam->pixels[p.y][p.x].z_buffer = d;
 		}
-	}
+	}*/
 }
 
 void	fdf_draw_img(t_env *env)
@@ -204,21 +205,56 @@ void	fdf_draw_img(t_env *env)
 		}
 		c.y++;
 	}
-	t_point **pts = fdf->map->points;;
+	t_point **pts = fdf->map->points;
 	c.y = 0;
 	while (c.y < fdf->map->height)
 	{
 		c.x = 0;
 		while (c.x < fdf->map->width)
 		{
-			if (c.x > 0)
-				fdf_draw_line(&pts[c.y][c.x], &pts[c.y][c.x - 1], cam);
-			if (c.y > 0)
-				fdf_draw_line(&pts[c.y][c.x], &pts[c.y - 1][c.x], cam);
+			if (pts[c.y][c.x].c_space.z > 0)
+			{
+				if (c.x > 0)
+					fdf_draw_line(&pts[c.y][c.x], &pts[c.y][c.x - 1], cam);
+				if (c.y > 0)
+					fdf_draw_line(&pts[c.y][c.x], &pts[c.y - 1][c.x], cam);
+			}
 			c.x++;
 		}
 		c.y++;
 	}
+	/////////
+
+
+	t_filter f;
+	int			i;
+	f.size.x = 3;
+	f.size.y = 3;
+	f.matrix = malloc(sizeof(double *) * f.size.y);
+	i = 0;
+	while (i < f.size.y)
+		f.matrix[i++] = malloc(sizeof(double) * f.size.x);
+	f.matrix[0][0] = -1;
+	f.matrix[0][1] = -1;
+	f.matrix[0][2] = 0;
+	f.matrix[1][0] = -1;
+	f.matrix[1][1] = 0;
+	f.matrix[1][2] = 1;
+	f.matrix[2][0] = 0;
+	f.matrix[2][1] = 1;
+	f.matrix[2][2] = 1;
+//	apply_filter(env, cam, &f);
+	free(*f.matrix);
+	free(*(f.matrix + 1));
+	free(*(f.matrix + 2));
+	free(f.matrix);
+
+
+
+
+
+
+	///////
 	c.y = 0;
 	while (c.y < cam->size.y)
 	{
