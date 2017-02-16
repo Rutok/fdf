@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 22:07:20 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/15 23:44:22 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/16 04:10:56 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,45 +19,132 @@
 
 static void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
 {
-	int			step;
-	t_2dpair	d;
-	t_2dpair	incr;
-	t_point		point;
+	t_2ipair	d;
+	t_2ipair	inc;
+	t_2ipair	point;
+	int			cumul;
+	int			i;
+	double		z;
+	double		z_step;
 	t_color		color_step;
-	t_2dpair	z_step;
+	t_color		c;
 
+	point.x = p1->c_view.x;
+	point.y = p1->c_view.y;
 	d.x = p2->c_view.x - p1->c_view.x;
 	d.y = p2->c_view.y - p1->c_view.y;
-	step = fabs(d.x) > fabs(d.y) ? fabs(d.x) : fabs(d.y);
-	z_step.x = p2->c_space.z - p1->c_space.z;
-	if (step)
+	inc.x = (d.x > 0) ? 1 : -1;
+	inc.y = (d.y > 0) ? 1 : -1;
+	d.x = abs(d.x);
+	d.y = abs(d.y);
+	z = p1->c_space.z;
+	c = p1->color;
+	if (d.x > d.y)
 	{
-		incr.x = d.x / (float)step;
-		incr.y = d.y / (float)step;
-		z_step.y = z_step.x / (float)step;
-		d.x = 0;
-		point = *p1;
-		color_step.r = (p2->color.r - p1->color.r) / step;
-		color_step.g = (p2->color.g - p1->color.g) / step;
-		color_step.b = (p2->color.b - p1->color.b) / step;
-		while (d.x++ < step)
+		color_step.r = (p2->color.r - p1->color.r) / (float)d.x;
+		color_step.g = (p2->color.g - p1->color.g) / (float)d.x;
+		color_step.b = (p2->color.b - p1->color.b) / (float)d.x;
+
+		z_step = (p2->c_space.z - p1->c_space.z) / d.x;
+		cumul = d.x / 2 ;
+		for (i = 1; i <= d.x; i++)
 		{
-			point.c_view.x += incr.x;
-			point.c_view.y += incr.y;
-			point.c_space.z += z_step.y;
-			point.color.r += color_step.r;
-			point.color.g += color_step.g;
-			point.color.b += color_step.b;
-			if (point.c_space.z <= cam->d)
-				return;
-			if (point.c_space.z > cam->d && round(point.c_view.x) < cam->size.x && round(point.c_view.y) < cam->size.y && point.c_view.x >= 0 && point.c_view.y >= 0)
+			c.r += color_step.r;
+			c.g += color_step.g;
+			c.b += color_step.b;
+
+			point.x += inc.x;
+			cumul += d.y;
+			if (cumul >= d.x)
 			{
-				cam->pixels[(int)(point.c_view.y)][(int)(point.c_view.x)].color = point.color;
-				cam->pixels[(int)(point.c_view.y)][(int)(point.c_view.x)].z_buffer = point.d;
+				cumul -= d.x;
+				point.y += inc.y;
+			}
+			if (point.x < cam->size.x && point.x > 0 && point.y < cam->size.y && point.y > 0)
+			{
+				z += z_step;
+				if (z > cam->d)
+				{
+					cam->pixels[point.y][point.x].color = c;
+					cam->pixels[point.y][point.x].z_buffer = z;
+				}
+			}
+		}
+	}
+	else
+	{
+		color_step.r = (p2->color.r - p1->color.r) / (float)d.y;
+		color_step.g = (p2->color.g - p1->color.g) / (float)d.y;
+		color_step.b = (p2->color.b - p1->color.b) / (float)d.y;
+
+		z_step = (p2->c_space.z - p1->c_space.z) / d.y;
+		cumul = d.y / 2 ;
+		for (i = 1 ; i <= d.y; i++)
+		{
+			point.y += inc.y;
+			cumul += d.x;
+			c.r += color_step.r;
+			c.g += color_step.g;
+			c.b += color_step.b;
+			if (cumul >= d.y)
+			{
+				cumul -= d.y;
+				point.x += inc.x;
+			}
+			if (point.x < cam->size.x && point.x > 0 && point.y < cam->size.y && point.y > 0)
+			{
+				z += z_step;
+				if (z > cam->d)
+				{
+					cam->pixels[point.y][point.x].color = c;
+					cam->pixels[point.y][point.x].z_buffer = z;
+				}
 			}
 		}
 	}
 }
+
+/*static void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
+  {
+  int			step;
+  t_2dpair	d;
+  t_2dpair	incr;
+  t_point		point;
+  t_color		color_step;
+  t_2dpair	z_step;
+
+  d.x = p2->c_view.x - p1->c_view.x;
+  d.y = p2->c_view.y - p1->c_view.y;
+  step = fabs(d.x) > fabs(d.y) ? fabs(d.x) : fabs(d.y);
+  z_step.x = p2->c_space.z - p1->c_space.z;
+  if (step)
+  {
+  incr.x = d.x / (float)step;
+  incr.y = d.y / (float)step;
+  z_step.y = z_step.x / (float)step;
+  d.x = 0;
+  point = *p1;
+  color_step.r = (p2->color.r - p1->color.r) / step;
+  color_step.g = (p2->color.g - p1->color.g) / step;
+  color_step.b = (p2->color.b - p1->color.b) / step;
+  while (d.x++ < step)
+  {
+  point.c_view.x += incr.x;
+  point.c_view.y += incr.y;
+  point.c_space.z += z_step.y;
+  point.color.r += color_step.r;
+  point.color.g += color_step.g;
+  point.color.b += color_step.b;
+  if (point.c_space.z <= cam->d)
+  return;
+  if (point.c_space.z > cam->d && round(point.c_view.x) < cam->size.x && round(point.c_view.y) < cam->size.y && point.c_view.x >= 0 && point.c_view.y >= 0)
+  {
+  cam->pixels[(int)(point.c_view.y)][(int)(point.c_view.x)].color = point.color;
+  cam->pixels[(int)(point.c_view.y)][(int)(point.c_view.x)].z_buffer = point.d;
+  }
+  }
+  }
+  }*/
 
 static void	fdf_draw_point(t_2ipair coord, t_point **points, t_camera *cam)
 {
@@ -74,7 +161,7 @@ static void	fdf_draw_point(t_2ipair coord, t_point **points, t_camera *cam)
 	point->c_view.y = p.y;
 	d = (point->c_space.x * point->c_space.x) + (point->c_space.y * point->c_space.y) + (point->c_space.z * point->c_space.z);
 	point->d = d;
-	if (p.x < cam->size.x && p.y < cam->size.y && p.x >= 0 && p.y >= 0 && point->c_space.z > 0)
+	if (p.x < cam->size.x && p.y < cam->size.y && p.x >= 0 && p.y >= 0)
 	{
 		if (point->c_space.z > cam->d && (cam->pixels[p.y][p.x].z_buffer == -1 || d < cam->pixels[p.y][p.x].z_buffer))
 		{
@@ -82,10 +169,6 @@ static void	fdf_draw_point(t_2ipair coord, t_point **points, t_camera *cam)
 			cam->pixels[p.y][p.x].z_buffer = d;
 		}
 	}
-	if (coord.x > 0)
-		fdf_draw_line(point, &points[coord.y][coord.x - 1], cam);
-	if (coord.y > 0)
-		fdf_draw_line(point, &points[coord.y - 1][coord.x], cam);
 }
 
 void	fdf_draw_img(t_env *env)
@@ -110,6 +193,21 @@ void	fdf_draw_img(t_env *env)
 			p->c_space = to_camera_space(&v, cam);
 			p->c_view = camera_project_vertex(&p->c_space, cam);
 			fdf_draw_point(c, fdf->map->points, cam);
+			c.x++;
+		}
+		c.y++;
+	}
+	t_point **pts = fdf->map->points;;
+	c.y = 0;
+	while (c.y < fdf->map->height)
+	{
+		c.x = 0;
+		while (c.x < fdf->map->width)
+		{
+			if (c.x > 0)
+				fdf_draw_line(&pts[c.y][c.x], &pts[c.y][c.x - 1], cam);
+			if (c.y > 0)
+				fdf_draw_line(&pts[c.y][c.x], &pts[c.y - 1][c.x], cam);
 			c.x++;
 		}
 		c.y++;
