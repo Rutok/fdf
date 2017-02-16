@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 22:07:20 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/16 04:10:56 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/16 04:34:56 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ static void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
 	double		z_step;
 	t_color		color_step;
 	t_color		c;
+	double		di;
+	double		ds;
 
 	point.x = p1->c_view.x;
 	point.y = p1->c_view.y;
@@ -38,6 +40,7 @@ static void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
 	d.x = abs(d.x);
 	d.y = abs(d.y);
 	z = p1->c_space.z;
+	di = p1->d;
 	c = p1->color;
 	if (d.x > d.y)
 	{
@@ -45,6 +48,7 @@ static void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
 		color_step.g = (p2->color.g - p1->color.g) / (float)d.x;
 		color_step.b = (p2->color.b - p1->color.b) / (float)d.x;
 
+		ds = (p2->d - p1->d) / d.x;
 		z_step = (p2->c_space.z - p1->c_space.z) / d.x;
 		cumul = d.x / 2 ;
 		for (i = 1; i <= d.x; i++)
@@ -63,10 +67,11 @@ static void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
 			if (point.x < cam->size.x && point.x > 0 && point.y < cam->size.y && point.y > 0)
 			{
 				z += z_step;
-				if (z > cam->d)
+				di += ds;
+				if (z > cam->d && (di < cam->pixels[point.y][point.x].z_buffer || cam->pixels[point.y][point.x].z_buffer == -1))
 				{
 					cam->pixels[point.y][point.x].color = c;
-					cam->pixels[point.y][point.x].z_buffer = z;
+					cam->pixels[point.y][point.x].z_buffer = di;
 				}
 			}
 		}
@@ -77,6 +82,7 @@ static void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
 		color_step.g = (p2->color.g - p1->color.g) / (float)d.y;
 		color_step.b = (p2->color.b - p1->color.b) / (float)d.y;
 
+		ds = (p2->d - p1->d) / d.y;
 		z_step = (p2->c_space.z - p1->c_space.z) / d.y;
 		cumul = d.y / 2 ;
 		for (i = 1 ; i <= d.y; i++)
@@ -94,10 +100,11 @@ static void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
 			if (point.x < cam->size.x && point.x > 0 && point.y < cam->size.y && point.y > 0)
 			{
 				z += z_step;
-				if (z > cam->d)
+				di += ds;
+				if (z > cam->d && (di < cam->pixels[point.y][point.x].z_buffer || cam->pixels[point.y][point.x].z_buffer == -1))
 				{
 					cam->pixels[point.y][point.x].color = c;
-					cam->pixels[point.y][point.x].z_buffer = z;
+					cam->pixels[point.y][point.x].z_buffer = di;
 				}
 			}
 		}
