@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 22:07:20 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/17 02:30:31 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/17 22:23:49 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,14 @@ static void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
 	t_color		c;
 	double		di;
 	double		ds;
+	t_point		*tt;
 
+	if (p2->c_space.z > p1->c_space.z)
+	{
+		tt = p2;
+		p2 = p1;
+		p1 = tt;
+	}
 	point.x = p1->c_view.x;
 	point.y = p1->c_view.y;
 	d.x = p2->c_view.x - p1->c_view.x;
@@ -66,14 +73,19 @@ static void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
 			}
 			if (point.x < cam->size.x && point.x > 0 && point.y < cam->size.y && point.y > 0)
 			{
-				z += z_step;
 				di += ds;
-				if (z > cam->d && (di < cam->pixels[point.y][point.x].z_buffer || cam->pixels[point.y][point.x].z_buffer == -1))
+				if (z > cam->d)
 				{
-					cam->pixels[point.y][point.x].color = c;
-					cam->pixels[point.y][point.x].z_buffer = di;
+					if (di < cam->pixels[point.y][point.x].z_buffer || cam->pixels[point.y][point.x].z_buffer == -1)
+					{
+						cam->pixels[point.y][point.x].color = c;
+						cam->pixels[point.y][point.x].z_buffer = di;
+					}
 				}
+				else
+					return;
 			}
+			z += z_step;
 		}
 	}
 	else
@@ -99,14 +111,19 @@ static void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
 			}
 			if (point.x < cam->size.x && point.x > 0 && point.y < cam->size.y && point.y > 0)
 			{
-				z += z_step;
 				di += ds;
-				if (z > cam->d && (di < cam->pixels[point.y][point.x].z_buffer || cam->pixels[point.y][point.x].z_buffer == -1))
+				if (z > cam->d)
+				{
+					if ((di < cam->pixels[point.y][point.x].z_buffer || cam->pixels[point.y][point.x].z_buffer == -1))
 				{
 					cam->pixels[point.y][point.x].color = c;
 					cam->pixels[point.y][point.x].z_buffer = di;
 				}
+				}
+				else
+					return;
 			}
+			z += z_step;
 		}
 	}
 }
@@ -149,13 +166,10 @@ void	fdf_draw_img(t_env *env)
 			p->c_space = to_camera_space(&v, cam);
 			p->c_view = camera_project_vertex(&p->c_space, cam);
 			fdf_draw_point(c, fdf->map->points, cam);
-			if (pts[c.y][c.x].c_space.z > 0)
-			{
-				if (c.x > 0)
-					fdf_draw_line(&pts[c.y][c.x], &pts[c.y][c.x - 1], cam);
-				if (c.y > 0)
-					fdf_draw_line(&pts[c.y][c.x], &pts[c.y - 1][c.x], cam);
-			}
+			if (c.x > 0 && (pts[c.y][c.x - 1].c_space.z > 0 || pts[c.y][c.x].c_space.z > 0))
+				fdf_draw_line(&pts[c.y][c.x], &pts[c.y][c.x - 1], cam);
+			if (c.y > 0 && (pts[c.y - 1][c.x].c_space.z > 0 || pts[c.y][c.x].c_space.z > 0))
+				fdf_draw_line(&pts[c.y][c.x], &pts[c.y - 1][c.x], cam);
 			c.x++;
 		}
 		c.y++;

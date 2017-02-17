@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 16:59:28 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/17 02:29:55 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/17 10:23:40 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,7 @@
 #include "fdf_event.h"
 #include "camera.h"
 
-#define APP_FPS 6000
-
-static void	print_fps(void)
-{
-	static int time;
-	static int fps;
-
-	fps++;
-	if (!time)
-		time = SDL_GetTicks();
-	if (SDL_GetTicks() >= (Uint32)time + 1000)
-	{
-		ft_putstr("FPS : ");
-		ft_putnbr(fps);
-		ft_putchar('\n');
-		fps = 0;
-		time = SDL_GetTicks();
-	}
-}
+#define APP_FPS 60
 
 static void		init_matrix(t_fdf *fdf)
 {
@@ -89,29 +71,28 @@ int		process_app(void *venv)
 {
 	t_env	*env;
 	t_fdf	*fdf;
-	int		time;
-	int		etime;
+//	int		time;
+//	int		etime;
 
 	env = (t_env *)venv;
 	fdf = (t_fdf *)env->app.d;
-	time = SDL_GetTicks();
-	fdf->to_draw = 1;
-	env->event.mouse.move = 0;
-	while (!env->event.exit)
-	{
-		etime = SDL_GetTicks() - time;
-		if (etime < 1000 / APP_FPS)
-			SDL_Delay((1000 / APP_FPS) - etime);
-		time += etime;
+//	time = SDL_GetTicks();
+//	fdf->to_draw = 1;
+//	env->event.mouse.move = 0;
+//	while (!env->event.exit)
+//	{
+//		etime = SDL_GetTicks() - time;
+//		if (etime < 1000 / APP_FPS)
+//			SDL_Delay((1000 / APP_FPS) - etime);
+//		time += etime;
 		fdf_events(env);
 		if (fdf->to_draw)
 		{
-			env->event.draw = 1;
 			fdf_draw_img(env);
 			drawer_wait_copy(env, &((t_fdf *)env->app.d)->scene.camera);
+		//	env->event.draw = 1;
 			fdf->to_draw = 0;
 		}
-		print_fps();
-	}
+//	}
 	return (1);
 }

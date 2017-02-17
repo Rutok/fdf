@@ -6,7 +6,7 @@
 #    By: nboste <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/12/08 23:43:17 by nboste            #+#    #+#              #
-#*   Updated: 2017/01/16 22:47:07 by nboste           ###   ########.fr       *#
+#*   Updated: 2017/02/17 10:44:31 by nboste           ###   ########.fr       *#
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,7 @@ all: $(NAME)
 
 $(NAME):
 	make -C ./engine
-	$(CC) $(FLG) $(LIB) $(INC) $(SRC) -lm -lengine -lft -framework SDL2 -o $(NAME) -O3
+	$(CC) $(FLG) $(LIB) $(INC) $(SRC) -lm -lengine -lft -framework SDL2 -o $(NAME) -O2 -flto
 
 linux:
 	make -C ./engine

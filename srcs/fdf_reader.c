@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:20:26 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/10 02:06:57 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/17 05:38:20 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ static void	fdf_build_map(int fd, t_map *map)
 
 	map->width = 0;
 	map->height = 0;
+	list = 0;
 	while (get_next_line(fd, &line) > 0)
 	{
 		split_line = ft_strsplit(line, ' ');
