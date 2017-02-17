@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 16:59:28 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/16 08:03:31 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/17 02:29:55 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,24 +95,20 @@ int		process_app(void *venv)
 	env = (t_env *)venv;
 	fdf = (t_fdf *)env->app.d;
 	time = SDL_GetTicks();
-	env->event.draw = 1;
-	fdf_draw_img(env);
-	drawer_wait_copy(env);
-	drawer_clean(&env->rend);
+	fdf->to_draw = 1;
 	env->event.mouse.move = 0;
 	while (!env->event.exit)
 	{
 		etime = SDL_GetTicks() - time;
 		if (etime < 1000 / APP_FPS)
 			SDL_Delay((1000 / APP_FPS) - etime);
-		time = SDL_GetTicks();
+		time += etime;
 		fdf_events(env);
 		if (fdf->to_draw)
 		{
 			env->event.draw = 1;
 			fdf_draw_img(env);
-			drawer_wait_copy(env);
-			drawer_clean(&env->rend);
+			drawer_wait_copy(env, &((t_fdf *)env->app.d)->scene.camera);
 			fdf->to_draw = 0;
 		}
 		print_fps();
