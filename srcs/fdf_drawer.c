@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 22:07:20 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/17 22:23:49 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/18 05:53:52 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@
 
 static void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
 {
-	t_2ipair	d;
+	t_2dpair	d;
 	t_2ipair	inc;
 	t_2ipair	point;
-	int			cumul;
+	double			cumul;
 	int			i;
 	double		z;
 	double		z_step;
@@ -44,16 +44,16 @@ static void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
 	d.y = p2->c_view.y - p1->c_view.y;
 	inc.x = (d.x > 0) ? 1 : -1;
 	inc.y = (d.y > 0) ? 1 : -1;
-	d.x = abs(d.x);
-	d.y = abs(d.y);
+	d.x = fabs(d.x);
+	d.y = fabs(d.y);
 	z = p1->c_space.z;
 	di = p1->d;
 	c = p1->color;
 	if (d.x > d.y)
 	{
-		color_step.r = (p2->color.r - p1->color.r) / (float)d.x;
-		color_step.g = (p2->color.g - p1->color.g) / (float)d.x;
-		color_step.b = (p2->color.b - p1->color.b) / (float)d.x;
+		color_step.r = (p2->color.r - p1->color.r) / d.x;
+		color_step.g = (p2->color.g - p1->color.g) / d.x;
+		color_step.b = (p2->color.b - p1->color.b) / d.x;
 
 		ds = (p2->d - p1->d) / d.x;
 		z_step = (p2->c_space.z - p1->c_space.z) / d.x;
@@ -83,16 +83,19 @@ static void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
 					}
 				}
 				else
+		//printf("%f\n", d.x);
 					return;
 			}
+			else
+				return;
 			z += z_step;
 		}
 	}
 	else
 	{
-		color_step.r = (p2->color.r - p1->color.r) / (float)d.y;
-		color_step.g = (p2->color.g - p1->color.g) / (float)d.y;
-		color_step.b = (p2->color.b - p1->color.b) / (float)d.y;
+		color_step.r = (p2->color.r - p1->color.r) / d.y;
+		color_step.g = (p2->color.g - p1->color.g) / d.y;
+		color_step.b = (p2->color.b - p1->color.b) / d.y;
 
 		ds = (p2->d - p1->d) / d.y;
 		z_step = (p2->c_space.z - p1->c_space.z) / d.y;
@@ -121,8 +124,11 @@ static void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
 				}
 				}
 				else
+		//printf("%f\n", d.y);
 					return;
 			}
+			else
+				return;
 			z += z_step;
 		}
 	}
@@ -136,7 +142,10 @@ static void	fdf_draw_point(t_2ipair coord, t_point **points, t_camera *cam)
 
 	point = &points[coord.y][coord.x];
 	p.x = round(((point->c_view.x + cam->ratio) * cam->size.x)  / (2 * cam->ratio));
+//	if (point->c_view.y != -1)
 	p.y = round(((point->c_view.y + 1) * cam->size.y)  / (2));
+//	else
+//		p.y = cam->size.y;
 	point->c_view.x = p.x;
 	point->c_view.y = p.y;
 	d = (point->c_space.x * point->c_space.x) + (point->c_space.y * point->c_space.y) + (point->c_space.z * point->c_space.z);

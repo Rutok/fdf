@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 16:59:28 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/17 10:23:40 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/18 05:10:55 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	init_app(t_env *env)
 	fdf_translate(fdf->map, DIR_X, -fdf->map->width * 10 / 2);
 	cam = &fdf->scene.camera;
 	init_camera(env, ft_degtorad(135), &fdf->scene.camera);
-	SDL_WarpMouseInWindow(NULL, cam->size.x / 2, cam->size.y / 2);
+//	SDL_WarpMouseInWindow(NULL, cam->size.x / 2, cam->size.y / 2);
 	cam->pos.x = 0;
 	cam->pos.y = 0;
 	cam->pos.z = 10;
@@ -63,8 +63,8 @@ void	init_app(t_env *env)
 	cam->u.z = 0;
 	cam->speed = 15;
 	cam->sensitivity = 0.04;
-	SDL_ShowCursor(SDL_DISABLE);
-	SDL_SetWindowGrab(env->win.win_sdl, SDL_TRUE);
+//	SDL_ShowCursor(SDL_DISABLE);
+//	SDL_SetWindowGrab(env->win.win_sdl, SDL_TRUE);
 }
 
 int		process_app(void *venv)

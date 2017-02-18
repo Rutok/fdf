@@ -37,7 +37,7 @@ all: $(NAME)
 
 $(NAME):
 	make -C ./engine
-	$(CC) $(FLG) $(LIB) $(INC) $(SRC) -lm -lengine -lft -framework SDL2 -o $(NAME) -O2 -flto
+	$(CC) $(FLG) $(LIB) $(INC) $(SRC) -lm -lengine -lft -framework SDL2 -o $(NAME) -O3
 
 linux:
 	make -C ./engine
