@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 18:18:34 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/18 05:16:27 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/19 07:50:15 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,8 @@ void	fdf_events(t_env *env)
 			z.x = 0;
 			z.y = 0;
 			z.z = 1;
-			d.x = ev->mouse.pos.x;
-			d.y = ev->mouse.pos.y;
+			d.x = ev->mouse.pos.x - (cam->size.x / 2);
+			d.y = ev->mouse.pos.y - (cam->size.y / 2);
 			if (d.x != 0 && d.y != 0)
 			{
 				d.x *= -cam->sensitivity;

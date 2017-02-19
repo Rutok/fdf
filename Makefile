@@ -6,7 +6,7 @@
 #    By: nboste <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/12/08 23:43:17 by nboste            #+#    #+#              #
-#*   Updated: 2017/02/17 10:44:31 by nboste           ###   ########.fr       *#
+#*   Updated: 2017/02/19 07:46:12 by nboste           ###   ########.fr       *#
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ $(NAME):
 
 linux:
 	make -C ./engine
-	$(CC) $(FLG) $(LIB) $(INC) $(SRC) -lm -lengine -lft -lSDL2 -o $(NAME) -O3
+	$(CC) $(FLG) $(LIB) $(INC) $(SRC) -lm -lengine -lft -lSDL2 -o $(NAME) -O3 -flto
 
 clean:
 	make -C ./engine clean
