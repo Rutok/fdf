@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:20:26 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/17 05:38:20 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/20 03:08:42 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	fdf_get_width(char **split)
 	return (i);
 }
 
-static t_color	fdf_getcolor(char *str)
+static t_color	fdf_getcolor_file(char *str)
 {
 	char	*c;
 	int		val;
@@ -53,6 +53,39 @@ static t_color	fdf_getcolor(char *str)
 	return (color);
 }
 
+t_color	fdf_getcolor(char *str, int z)
+{
+	t_color	c;
+
+	if (str)
+		return (fdf_getcolor_file(str));
+	else
+	{
+		if (z <= 0)
+		{
+			c.r = 0;
+			c.g = 0;
+			if (z >= -255)
+				c.b = z + 255;
+			else
+				c.b = 0;
+		}
+		else if (z < 50)
+		{
+			c.r = 0;
+			c.g = z + 45;
+			c.b = 0;
+		}
+		else
+		{
+			c.r = (z % 255) + 55;
+			c.g = (z % 128) + 55;
+			c.b = (z % 64) + 55;
+		}
+	}
+	return (c);
+}
+
 static void	fdf_fill_map(t_map *map, t_list *list)
 {
 	int		x;
@@ -70,8 +103,8 @@ static void	fdf_fill_map(t_map *map, t_list *list)
 		{
 			map->points[y][x].pos.x = x * 10;
 			map->points[y][x].pos.y = y * 10;
-			map->points[y][x].pos.z = ft_atoi(((char **)list->content)[x]);
-			map->points[y][x].color = fdf_getcolor(((char **)list->content)[x]);
+			map->points[y][x].pos.z = ft_atoi(((char **)list->content)[x]) / 43;
+			map->points[y][x].color = fdf_getcolor(((char **)list->content)[x], 0);
 			x++;
 		}
 		y++;

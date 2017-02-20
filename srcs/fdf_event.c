@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 18:18:34 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/19 07:50:15 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/20 03:26:10 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	fdf_events(t_env *env)
 	t_event		*ev;
 	t_fdf		*fdf;
 	t_camera	*cam;
-	static t_2ipair mouse;
+	static t_2dpair off;
 
 	ev = &env->event;
 	fdf = (t_fdf *)env->app.d;
@@ -76,31 +76,27 @@ void	fdf_events(t_env *env)
 	ev->in_use = 1;
 	if (ev->mouse.move)
 	{
-		if (mouse.x)
+		t_2dpair	d;
+		t_3dvertex	z;
+		z.x = 0;
+		z.y = 0;
+		z.z = 1;
+		d.x = ev->mouse.pos.x + off.x - (cam->size.x / 2);
+		d.y = ev->mouse.pos.y + off.y - (cam->size.y / 2);
+		off.x = d.x;
+		off.y = d.y;
+		if (d.x != 0 && d.y != 0)
 		{
-			t_2dpair	d;
-			t_3dvertex	z;
-			z.x = 0;
-			z.y = 0;
-			z.z = 1;
-			d.x = ev->mouse.pos.x - (cam->size.x / 2);
-			d.y = ev->mouse.pos.y - (cam->size.y / 2);
-			if (d.x != 0 && d.y != 0)
-			{
-				d.x *= -cam->sensitivity;
-				d.y *= -0.1;
-				rotate_3dvertex(&cam->u, z, ft_degtorad(d.x));
-				rotate_3dvertex(&cam->n, z, ft_degtorad(d.x));
-				rotate_3dvertex(&cam->v, z, ft_degtorad(d.x));
-				rotate_3dvertex(&cam->n, cam->u, ft_degtorad(d.y));
-				rotate_3dvertex(&cam->v, cam->u, ft_degtorad(d.y));
-				SDL_WarpMouseInWindow(NULL, cam->size.x / 2, cam->size.y / 2);
-			}
-		}
-		else
-		{
-			mouse.x = ev->mouse.pos.x;
-			mouse.y = ev->mouse.pos.y;
+			d.x *= -cam->sensitivity;
+			d.y *= -0.1;
+			off.x /= 10;
+			off.y /= 10;
+			rotate_3dvertex(&cam->u, z, ft_degtorad(d.x));
+			rotate_3dvertex(&cam->n, z, ft_degtorad(d.x));
+			rotate_3dvertex(&cam->v, z, ft_degtorad(d.x));
+			rotate_3dvertex(&cam->n, cam->u, ft_degtorad(d.y));
+			rotate_3dvertex(&cam->v, cam->u, ft_degtorad(d.y));
+			SDL_WarpMouseInWindow(NULL, cam->size.x / 2, cam->size.y / 2);
 		}
 	}
 	if (ev->key_special.keys[KEY_ESCAPE])

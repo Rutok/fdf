@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:14:27 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/10 02:08:34 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/20 03:09:52 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ typedef struct	s_point
 	t_2dpair	c_view;
 	double		d;
 	t_color		color;
+	t_bool		draw;
 }				t_point;
 
 typedef struct	s_map
@@ -38,5 +39,7 @@ typedef struct	s_map
 }				t_map;
 
 t_map	*fdf_get_map(char *path);
+
+t_color	fdf_getcolor(char *str, int z);
 
 #endif
