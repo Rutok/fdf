@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 16:59:28 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/18 05:10:55 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/21 02:12:05 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,11 @@ void	init_app(t_env *env)
 	init_matrix(fdf);
 	fdf->map = fdf_get_map(env->app.argv[1]);
 	fdf->to_draw = 0;
+	fdf->range = 500000;
 	fdf_translate(fdf->map, DIR_Y, -fdf->map->height * 10 / 2);
 	fdf_translate(fdf->map, DIR_X, -fdf->map->width * 10 / 2);
 	cam = &fdf->scene.camera;
 	init_camera(env, ft_degtorad(135), &fdf->scene.camera);
-//	SDL_WarpMouseInWindow(NULL, cam->size.x / 2, cam->size.y / 2);
 	cam->pos.x = 0;
 	cam->pos.y = 0;
 	cam->pos.z = 10;
@@ -63,36 +63,21 @@ void	init_app(t_env *env)
 	cam->u.z = 0;
 	cam->speed = 15;
 	cam->sensitivity = 0.04;
-//	SDL_ShowCursor(SDL_DISABLE);
-//	SDL_SetWindowGrab(env->win.win_sdl, SDL_TRUE);
 }
 
 int		process_app(void *venv)
 {
 	t_env	*env;
 	t_fdf	*fdf;
-//	int		time;
-//	int		etime;
 
 	env = (t_env *)venv;
 	fdf = (t_fdf *)env->app.d;
-//	time = SDL_GetTicks();
-//	fdf->to_draw = 1;
-//	env->event.mouse.move = 0;
-//	while (!env->event.exit)
-//	{
-//		etime = SDL_GetTicks() - time;
-//		if (etime < 1000 / APP_FPS)
-//			SDL_Delay((1000 / APP_FPS) - etime);
-//		time += etime;
-		fdf_events(env);
-		if (fdf->to_draw)
-		{
-			fdf_draw_img(env);
-			drawer_wait_copy(env, &((t_fdf *)env->app.d)->scene.camera);
-		//	env->event.draw = 1;
-			fdf->to_draw = 0;
-		}
-//	}
+	fdf_events(env);
+	if (fdf->to_draw)
+	{
+		fdf_draw_img(env);
+		drawer_wait_copy(env, &((t_fdf *)env->app.d)->scene.camera);
+		fdf->to_draw = 0;
+	}
 	return (1);
 }

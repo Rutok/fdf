@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:14:27 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/20 03:09:52 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/21 03:23:57 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,5 @@ typedef struct	s_map
 }				t_map;
 
 t_map	*fdf_get_map(char *path);
-
-t_color	fdf_getcolor(char *str, int z);
 
 #endif

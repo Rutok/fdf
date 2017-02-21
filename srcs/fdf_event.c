@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 18:18:34 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/20 03:26:10 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/21 03:19:39 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,54 +14,7 @@
 #include "fdf.h"
 #include "fdf_process.h"
 #include <SDL2/SDL.h>
-
-static int	event_to_process(t_event *ev)
-{
-	if (ev->key_nav.keys[KEY_LEFT]
-			|| ev->key_nav.keys[KEY_RIGHT] || ev->key_nav.keys[KEY_UP]
-			|| ev->key_nav.keys[KEY_DOWN] || ev->key_nav.keys[KEY_PAGEUP]
-			|| ev->key_nav.keys[KEY_PAGEDOWN] || ev->key_alphan.letters[KEY_W]
-			|| ev->key_alphan.letters[KEY_A] || ev->key_alphan.letters[KEY_S]
-			|| ev->key_alphan.letters[KEY_D] || ev->mouse.move)
-		return (1);
-	return (0);
-}
-
-static void	reset_event(t_event *ev)
-{
-	ev->key_nav.keys[KEY_LEFT] = 0;
-	ev->key_nav.keys[KEY_RIGHT] = 0;
-	ev->key_nav.keys[KEY_UP] = 0;
-	ev->key_nav.keys[KEY_DOWN] = 0;
-	ev->key_nav.keys[KEY_PAGEUP] = 0;
-	ev->key_nav.keys[KEY_PAGEDOWN] = 0;
-	ev->key_alphan.letters[KEY_W] = 0;
-	ev->key_alphan.letters[KEY_A] = 0;
-	ev->key_alphan.letters[KEY_S] = 0;
-	ev->key_alphan.letters[KEY_D] = 0;
-	ev->mouse.move = 0;
-}
-
-static void	rotate_3dvertex(t_3dvertex *v, t_3dvertex n, double a)
-{
-	t_3dvertex	tmp;
-	t_2dpair	trig;
-
-	if (!a)
-		return;
-	trig.x = cos(a);
-	trig.y = sin(a);
-	tmp.x = ((trig.x + ((1 - trig.x) * n.x * n.x)) * v->x)
-		+ ((((1 - trig.x) * n.x * n.y) - (trig.y * n.z)) * v->y)
-		+ ((((1 - trig.x) * n.x * n.z) + (trig.y * n.y)) * v->z);
-	tmp.y = ((((1 - trig.x) * n.x * n.y) + (trig.y * n.z)) * v->x)
-		+ ((trig.x + ((1 - trig.x) * n.y * n.y)) * v->y)
-		+ ((((1 - trig.x) * n.y * n.z) - (trig.y * n.x)) * v->z);
-	tmp.z = ((((1 - trig.x) * n.x * n.z) - (trig.y * n.y)) * v->x)
-		+ ((((1 - trig.x) * n.y * n.z) + (trig.y * n.x)) * v->y)
-		+ ((trig.x + ((1 - trig.x) * n.z * n.z)) * v->z);
-	*v = tmp;
-}
+#include "vertex_utility.h"
 
 void	fdf_events(t_env *env)
 {
@@ -73,7 +26,6 @@ void	fdf_events(t_env *env)
 	ev = &env->event;
 	fdf = (t_fdf *)env->app.d;
 	cam = &fdf->scene.camera;
-	ev->in_use = 1;
 	if (ev->mouse.move)
 	{
 		t_2dpair	d;
@@ -99,46 +51,51 @@ void	fdf_events(t_env *env)
 			SDL_WarpMouseInWindow(NULL, cam->size.x / 2, cam->size.y / 2);
 		}
 	}
-	if (ev->key_special.keys[KEY_ESCAPE])
+	if (ev->keys[SDL_SCANCODE_ESCAPE])
 		ev->exit = 1;
-	if (ev->key_nav.keys[KEY_LEFT])
+	if (ev->keys[SDL_SCANCODE_LEFT])
 		fdf_apply_matrix(fdf->map, fdf->matrix.rot_z_pos);
-	if (ev->key_nav.keys[KEY_RIGHT])
+	if (ev->keys[SDL_SCANCODE_RIGHT])
 		fdf_apply_matrix(fdf->map, fdf->matrix.rot_z_neg);
-	if (ev->key_nav.keys[KEY_UP])
+	if (ev->keys[SDL_SCANCODE_UP])
 		fdf_apply_matrix(fdf->map, fdf->matrix.rot_x_pos);
-	if (ev->key_nav.keys[KEY_DOWN])
+	if (ev->keys[SDL_SCANCODE_DOWN])
 		fdf_apply_matrix(fdf->map, fdf->matrix.rot_x_neg);
-	if (ev->key_nav.keys[KEY_PAGEUP])
+	if (ev->keys[SDL_SCANCODE_PAGEUP])
 		fdf_apply_matrix(fdf->map, fdf->matrix.homo_in);
-	if (ev->key_nav.keys[KEY_PAGEDOWN])
+	if (ev->keys[SDL_SCANCODE_PAGEDOWN])
 		fdf_apply_matrix(fdf->map, fdf->matrix.homo_out);
-	if (ev->key_alphan.letters[KEY_W])
+	if (ev->keys[SDL_SCANCODE_W])
 	{
 		cam->pos.x += cam->n.x * cam->speed;
 		cam->pos.y += cam->n.y * cam->speed;
 		cam->pos.z += cam->n.z * cam->speed;
 	}
-	if (ev->key_alphan.letters[KEY_A])
+	if (ev->keys[SDL_SCANCODE_A])
 	{
 		cam->pos.x -= cam->u.x * cam->speed;
 		cam->pos.y -= cam->u.y * cam->speed;
 		cam->pos.z -= cam->u.z * cam->speed;
 	}
-	if (ev->key_alphan.letters[KEY_S])
+	if (ev->keys[SDL_SCANCODE_S])
 	{
 		cam->pos.x -= cam->n.x * cam->speed;
 		cam->pos.y -= cam->n.y * cam->speed;
 		cam->pos.z -= cam->n.z * cam->speed;
 	}
-	if (ev->key_alphan.letters[KEY_D])
+	if (ev->keys[SDL_SCANCODE_D])
 	{
 		cam->pos.x += cam->u.x * cam->speed;
 		cam->pos.y += cam->u.y * cam->speed;
 		cam->pos.z += cam->u.z * cam->speed;
 	}
-	if (event_to_process(ev))
-		fdf->to_draw = 1;
-	reset_event(ev);
-	ev->in_use = 0;
+	if (ev->keys[SDL_SCANCODE_O])
+	{
+		fdf->range *= 1.1;
+	}
+	if (ev->keys[SDL_SCANCODE_L])
+	{
+		fdf->range *= .9;
+	}
+	fdf->to_draw = 1;
 }
