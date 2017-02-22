@@ -51,6 +51,10 @@ fclean: clean
 	make -C ./engine fclean
 	rm -rf $(NAME)
 
+debug:
+	make -C ./engine
+	$(CC) $(FLG) $(LIB) $(INC) $(SRC) -lm -lengine -lft -framework SDL2 -o $(NAME) -g
+
 re: fclean all
 
 rex: fclean all

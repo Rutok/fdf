@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 22:07:20 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/21 03:28:31 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/22 04:23:08 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,25 +35,30 @@ void	fdf_draw_img(t_env *env)
 		{
 			p = &fdf->map->points[c.y][c.x];
 			to_camera_space(&p->pos, &p->c_space, cam);
-			p->d = (p->c_space.x * p->c_space.x) + (p->c_space.y * p->c_space.y) + (p->c_space.z * p->c_space.z);
-			if (p->d < fdf->range && p->c_space.z > 0)
+			if (p->c_space.z > 0)
 			{
-				p->draw = 1;
-				camera_project_vertex(&p->c_space, &p->c_view, cam);
-				if (c.x > 0 && pts[c.y][c.x - 1].draw
-						&& (pts[c.y][c.x - 1].c_space.z > 0 || pts[c.y][c.x].c_space.z > 0)
-						&& (((pts[c.y][c.x - 1].c_view.x < cam->size.x && pts[c.y][c.x - 1].c_view.x >= 0)
-								|| (pts[c.y][c.x].c_view.x < cam->size.x && pts[c.y][c.x].c_view.x >= 0))
-							&& ((pts[c.y][c.x - 1].c_view.y < cam->size.y && pts[c.y][c.x - 1].c_view.y >= 0)
-								|| (pts[c.y][c.x].c_view.y < cam->size.y && pts[c.y][c.x].c_view.y >= 0))))
-					fdf_draw_line(&pts[c.y][c.x], &pts[c.y][c.x - 1], cam);
-				if (c.y > 0 && pts[c.y - 1][c.x].draw
-						&& (pts[c.y - 1][c.x].c_space.z > 0 || pts[c.y][c.x].c_space.z > 0)
-						&& (((pts[c.y - 1][c.x].c_view.x < cam->size.x && pts[c.y - 1][c.x].c_view.x >= 0)
-								|| (pts[c.y][c.x].c_view.x < cam->size.x && pts[c.y][c.x].c_view.x >= 0))
-							&& ((pts[c.y - 1][c.x].c_view.y < cam->size.y && pts[c.y - 1][c.x].c_view.y >= 0)
-								|| (pts[c.y][c.x].c_view.y < cam->size.y && pts[c.y ][c.x].c_view.y >= 0))))
-					fdf_draw_line(&pts[c.y][c.x], &pts[c.y - 1][c.x], cam);
+				p->d = (p->c_space.x * p->c_space.x) + (p->c_space.y * p->c_space.y) + (p->c_space.z * p->c_space.z);
+				if (p->d < fdf->range)
+				{
+					p->draw = 1;
+					camera_project_vertex(&p->c_space, &p->c_view, cam);
+					if (c.x > 0 && pts[c.y][c.x - 1].draw
+							&& (pts[c.y][c.x - 1].c_space.z > 0 || pts[c.y][c.x].c_space.z > 0)
+							&& (((pts[c.y][c.x - 1].c_view.x < cam->size.x && pts[c.y][c.x - 1].c_view.x >= 0)
+									|| (pts[c.y][c.x].c_view.x < cam->size.x && pts[c.y][c.x].c_view.x >= 0))
+								&& ((pts[c.y][c.x - 1].c_view.y < cam->size.y && pts[c.y][c.x - 1].c_view.y >= 0)
+									|| (pts[c.y][c.x].c_view.y < cam->size.y && pts[c.y][c.x].c_view.y >= 0))))
+						fdf_draw_line(&pts[c.y][c.x], &pts[c.y][c.x - 1], cam);
+					if (c.y > 0 && pts[c.y - 1][c.x].draw
+							&& (pts[c.y - 1][c.x].c_space.z > 0 || pts[c.y][c.x].c_space.z > 0)
+							&& (((pts[c.y - 1][c.x].c_view.x < cam->size.x && pts[c.y - 1][c.x].c_view.x >= 0)
+									|| (pts[c.y][c.x].c_view.x < cam->size.x && pts[c.y][c.x].c_view.x >= 0))
+								&& ((pts[c.y - 1][c.x].c_view.y < cam->size.y && pts[c.y - 1][c.x].c_view.y >= 0)
+									|| (pts[c.y][c.x].c_view.y < cam->size.y && pts[c.y ][c.x].c_view.y >= 0))))
+						fdf_draw_line(&pts[c.y][c.x], &pts[c.y - 1][c.x], cam);
+				}
+				else
+					p->draw = 0;
 			}
 			else
 				p->draw = 0;
@@ -73,7 +78,9 @@ void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
 	double		di;
 	double		ds;
 	t_2dpair	zs;
+	int			tmp;
 
+	tmp = 0;
 	point.x = p1->c_view.x;
 	point.y = p1->c_view.y;
 	d.x = p2->c_view.x - p1->c_view.x;
@@ -100,7 +107,7 @@ void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
 				cumul -= d.x;
 				point.y += inc.y;
 			}
-			if (point.x < cam->size.x && point.x > 0 && point.y < cam->size.y && point.y > 0)
+			if (point.x < cam->size.x && point.x >= 0 && point.y < cam->size.y && point.y >= 0)
 			{
 				di += ds;
 				if (di < cam->pixels[point.y][point.x].z_buffer || cam->pixels[point.y][point.x].z_buffer == -1)
@@ -108,6 +115,12 @@ void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
 					cam->pixels[point.y][point.x].color = fdf_getcolor(round(zs.y));
 					cam->pixels[point.y][point.x].z_buffer = di;
 				}
+			}
+			else
+			{
+				tmp++;
+			if (tmp != i)
+				return;
 			}
 		}
 	}
@@ -126,7 +139,7 @@ void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
 				cumul -= d.y;
 				point.x += inc.x;
 			}
-			if (point.x < cam->size.x && point.x > 0 && point.y < cam->size.y && point.y > 0)
+			if (point.x < cam->size.x && point.x >= 0 && point.y < cam->size.y && point.y >= 0)
 			{
 				di += ds;
 				if ((di < cam->pixels[point.y][point.x].z_buffer || cam->pixels[point.y][point.x].z_buffer == -1))
@@ -134,6 +147,12 @@ void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
 					cam->pixels[point.y][point.x].color = fdf_getcolor(round(zs.y));
 					cam->pixels[point.y][point.x].z_buffer = di;
 				}
+			}
+			else
+			{
+				tmp++;
+			if (tmp != i)
+				return;
 			}
 		}
 	}

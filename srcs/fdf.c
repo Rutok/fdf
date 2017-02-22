@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 16:59:28 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/21 02:12:05 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/22 07:38:00 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	init_app(t_env *env)
 	cam->u.x = 1;
 	cam->u.y = 0;
 	cam->u.z = 0;
-	cam->speed = 15;
+	cam->speed = 30;
 	cam->sensitivity = 0.04;
 }
 

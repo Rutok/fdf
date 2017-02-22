@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 18:18:34 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/21 03:19:39 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/21 23:29:20 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,53 +49,77 @@ void	fdf_events(t_env *env)
 			rotate_3dvertex(&cam->n, cam->u, ft_degtorad(d.y));
 			rotate_3dvertex(&cam->v, cam->u, ft_degtorad(d.y));
 			SDL_WarpMouseInWindow(NULL, cam->size.x / 2, cam->size.y / 2);
+			fdf->to_draw = 1;
 		}
 	}
 	if (ev->keys[SDL_SCANCODE_ESCAPE])
 		ev->exit = 1;
 	if (ev->keys[SDL_SCANCODE_LEFT])
+	{
 		fdf_apply_matrix(fdf->map, fdf->matrix.rot_z_pos);
+		fdf->to_draw = 1;
+	}
 	if (ev->keys[SDL_SCANCODE_RIGHT])
+	{
 		fdf_apply_matrix(fdf->map, fdf->matrix.rot_z_neg);
+		fdf->to_draw = 1;
+	}
 	if (ev->keys[SDL_SCANCODE_UP])
+	{
 		fdf_apply_matrix(fdf->map, fdf->matrix.rot_x_pos);
+		fdf->to_draw = 1;
+	}
 	if (ev->keys[SDL_SCANCODE_DOWN])
+	{
 		fdf_apply_matrix(fdf->map, fdf->matrix.rot_x_neg);
+		fdf->to_draw = 1;
+	}
 	if (ev->keys[SDL_SCANCODE_PAGEUP])
+	{
 		fdf_apply_matrix(fdf->map, fdf->matrix.homo_in);
+		fdf->to_draw = 1;
+	}
 	if (ev->keys[SDL_SCANCODE_PAGEDOWN])
+	{
 		fdf_apply_matrix(fdf->map, fdf->matrix.homo_out);
+		fdf->to_draw = 1;
+	}
 	if (ev->keys[SDL_SCANCODE_W])
 	{
 		cam->pos.x += cam->n.x * cam->speed;
 		cam->pos.y += cam->n.y * cam->speed;
 		cam->pos.z += cam->n.z * cam->speed;
+		fdf->to_draw = 1;
 	}
 	if (ev->keys[SDL_SCANCODE_A])
 	{
 		cam->pos.x -= cam->u.x * cam->speed;
 		cam->pos.y -= cam->u.y * cam->speed;
 		cam->pos.z -= cam->u.z * cam->speed;
+		fdf->to_draw = 1;
 	}
 	if (ev->keys[SDL_SCANCODE_S])
 	{
 		cam->pos.x -= cam->n.x * cam->speed;
 		cam->pos.y -= cam->n.y * cam->speed;
 		cam->pos.z -= cam->n.z * cam->speed;
+		fdf->to_draw = 1;
 	}
 	if (ev->keys[SDL_SCANCODE_D])
 	{
 		cam->pos.x += cam->u.x * cam->speed;
 		cam->pos.y += cam->u.y * cam->speed;
 		cam->pos.z += cam->u.z * cam->speed;
+		fdf->to_draw = 1;
 	}
 	if (ev->keys[SDL_SCANCODE_O])
 	{
 		fdf->range *= 1.1;
+		fdf->to_draw = 1;
 	}
 	if (ev->keys[SDL_SCANCODE_L])
 	{
 		fdf->range *= .9;
+		fdf->to_draw = 1;
 	}
-	fdf->to_draw = 1;
 }
