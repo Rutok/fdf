@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 18:18:34 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/21 23:29:20 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/23 04:45:37 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,5 +121,19 @@ void	fdf_events(t_env *env)
 	{
 		fdf->range *= .9;
 		fdf->to_draw = 1;
+	}
+	static int tmp;
+	if (ev->keys[SDL_SCANCODE_M])
+	{
+		tmp = 1;
+	}
+	else if (tmp == 1)
+	{
+		if (cam->projection == parallel)
+			cam->projection = perspective;
+		else
+			cam->projection = parallel;
+		fdf->to_draw = 1;
+		tmp = 0;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 16:59:28 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/22 07:38:00 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/23 02:31:05 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void	init_app(t_env *env)
 	cam->u.z = 0;
 	cam->speed = 30;
 	cam->sensitivity = 0.04;
+	cam->projection = perspective;
 }
 
 int		process_app(void *venv)
