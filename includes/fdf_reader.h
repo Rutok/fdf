@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:14:27 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/21 03:23:57 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/24 21:19:43 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,6 @@ typedef struct	s_map
 	t_point		**points;
 	int			width;
 	int			height;
-	t_2ipair	min;
-	t_2ipair	max;
 }				t_map;
 
 t_map	*fdf_get_map(char *path);

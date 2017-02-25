@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 22:07:20 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/22 04:23:08 by nboste           ###   ########.fr       */
+/*   Updated: 2017/02/25 00:15:00 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,15 @@ void	fdf_draw_line(t_point* p1, t_point *p2, t_camera *cam)
 	double		ds;
 	t_2dpair	zs;
 	int			tmp;
+	t_point		*p;
 
 	tmp = 0;
+	if (p1->c_view.x < 0 || p1->c_view.x > cam->size.x - 1 || p1->c_view.y < 0 || p1->c_view.y > cam->size.y - 1)
+	{
+		p = p1;
+		p1 = p2;
+		p2 = p;
+	}
 	point.x = p1->c_view.x;
 	point.y = p1->c_view.y;
 	d.x = p2->c_view.x - p1->c_view.x;
