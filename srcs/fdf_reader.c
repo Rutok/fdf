@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:20:26 by nboste            #+#    #+#             */
-/*   Updated: 2017/03/04 02:07:47 by nboste           ###   ########.fr       */
+/*   Updated: 2017/03/04 03:08:10 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,9 @@ static t_color	fdf_getcolor(char *str, int z)
 				val += 10 + c[i] - 'A';
 			i++;
 		}
-	color.r = val >> 16;
-	color.g = (val & 0xFF00) >> 8;
-	color.b = (val & 0xFF);
+		color.r = val >> 16;
+		color.g = (val & 0xFF00) >> 8;
+		color.b = (val & 0xFF);
 	}
 	else
 		color = fdf_getcolorz(z);
