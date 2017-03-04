@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 18:18:34 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/24 23:56:16 by nboste           ###   ########.fr       */
+/*   Updated: 2017/03/04 03:10:37 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	fdf_events(t_env *env)
 	}
 	if (ev->keys[SDL_SCANCODE_ESCAPE])
 		ev->exit = 1;
-	if (1 || ev->keys[SDL_SCANCODE_LEFT])
+	if (ev->keys[SDL_SCANCODE_LEFT])
 	{
 		fdf_apply_matrix(fdf->map, fdf->matrix.rot_z_pos);
 		fdf->to_draw = 1;
