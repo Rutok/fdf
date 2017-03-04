@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:20:26 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/21 03:25:07 by nboste           ###   ########.fr       */
+/*   Updated: 2017/03/04 02:07:47 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,35 @@ static int	fdf_get_width(char **split)
 	return (i);
 }
 
-static t_color	fdf_getcolor_file(char *str)
+static t_color	fdf_getcolorz(int z)
+{
+	t_color	c;
+
+	if (z <= 0)
+	{
+		c.r = 0;
+		c.g = 0;
+		if (z >= -255)
+			c.b = z + 255;
+		else
+			c.b = 0;
+	}
+	else if (z < 50)
+	{
+		c.r = 0;
+		c.g = z + 45;
+		c.b = 0;
+	}
+	else
+	{
+		c.r = (z % 255) + 55;
+		c.g = (z % 128) + 55;
+		c.b = (z % 64) + 55;
+	}
+	return (c);
+}
+
+static t_color	fdf_getcolor(char *str, int z)
 {
 	char	*c;
 	int		val;
@@ -44,12 +72,12 @@ static t_color	fdf_getcolor_file(char *str)
 				val += 10 + c[i] - 'A';
 			i++;
 		}
-	}
-	else
-		val = 0x00FFFFFF;
 	color.r = val >> 16;
 	color.g = (val & 0xFF00) >> 8;
 	color.b = (val & 0xFF);
+	}
+	else
+		color = fdf_getcolorz(z);
 	return (color);
 }
 
@@ -58,20 +86,20 @@ static void	fdf_fill_map(t_map *map, t_list *list)
 	int		x;
 	int		y;
 
-	if (!(map->points = (t_point **)malloc(sizeof(t_point *) * map->height)))
+	if (!(map->points = (t_fdfpoint **)malloc(sizeof(t_fdfpoint *) * map->height)))
 		ft_exit("Cant allocate memory.");
 	y = 0;
 	while (list)
 	{
-		if (!(map->points[y] = (t_point *)malloc(sizeof(t_point) * map->width)))
+		if (!(map->points[y] = (t_fdfpoint *)malloc(sizeof(t_fdfpoint) * map->width)))
 			ft_exit("Cant allocate memory.");
 		x = 0;
 		while (x < map->width)
 		{
 			map->points[y][x].pos.x = x * 10;
 			map->points[y][x].pos.y = y * 10;
-			map->points[y][x].pos.z = ft_atoi(((char **)list->content)[x]) / 43.0;
-			map->points[y][x].color = fdf_getcolor_file(((char **)list->content)[x]);
+			map->points[y][x].pos.z = ft_atoi(((char **)list->content)[x]) / 23.0;
+			map->points[y][x].color = fdf_getcolor(((char **)list->content)[x], map->points[y][x].pos.z);
 			x++;
 		}
 		y++;

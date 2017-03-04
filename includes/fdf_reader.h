@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:14:27 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/21 03:23:57 by nboste           ###   ########.fr       */
+/*   Updated: 2017/03/04 00:43:38 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include <fcntl.h>
 #include "types.h"
 
-typedef struct	s_point
+typedef struct	s_fdfpoint
 {
 	t_3dvertex	pos;
 	t_3dvertex	c_space;
@@ -27,11 +27,11 @@ typedef struct	s_point
 	double		d;
 	t_color		color;
 	t_bool		draw;
-}				t_point;
+}				t_fdfpoint;
 
 typedef struct	s_map
 {
-	t_point		**points;
+	t_fdfpoint	**points;
 	int			width;
 	int			height;
 	t_2ipair	min;

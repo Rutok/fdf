@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 05:34:57 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/10 02:29:19 by nboste           ###   ########.fr       */
+/*   Updated: 2017/03/04 00:46:13 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ void	fdf_apply_matrix(t_map *map, double **matrix)
 {
 	int		x;
 	int		y;
-	t_point	*point;
-	t_point	 p2;
+	t_fdfpoint	*point;
+	t_fdfpoint	 p2;
 
 	x = 0;
 	while (x < map->width)
@@ -41,7 +41,7 @@ void	fdf_translate(t_map *map, char dir, double step)
 {
 	int		x;
 	int		y;
-	t_point	*point;
+	t_fdfpoint	*point;
 
 	x = 0;
 	while (x < map->width)
