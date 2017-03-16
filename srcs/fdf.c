@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 16:59:28 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/23 02:31:05 by nboste           ###   ########.fr       */
+/*   Updated: 2017/03/16 18:56:51 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@
 #include "fdf_event.h"
 #include "camera.h"
 
-#define APP_FPS 60
-
 static void		init_matrix(t_fdf *fdf)
 {
 	fdf->matrix.rot_z_pos = fdf_get_rotmat_z(1);
@@ -31,6 +29,32 @@ static void		init_matrix(t_fdf *fdf)
 	fdf->matrix.rot_y_neg = fdf_get_rotmat_y(-1);
 	fdf->matrix.homo_in = fdf_get_homo(1.2);
 	fdf->matrix.homo_out = fdf_get_homo(0.8);
+}
+
+static void		free_matrix(t_fdf *fdf)
+{
+	int		i;
+
+	i = -1;
+	while (++i < 3)
+	{
+		free(fdf->matrix.rot_x_pos[i]);
+		free(fdf->matrix.rot_x_neg[i]);
+		free(fdf->matrix.rot_y_pos[i]);
+		free(fdf->matrix.rot_y_neg[i]);
+		free(fdf->matrix.rot_z_pos[i]);
+		free(fdf->matrix.rot_z_neg[i]);
+		free(fdf->matrix.homo_in[i]);
+		free(fdf->matrix.homo_out[i]);
+	}
+	free(fdf->matrix.rot_x_pos);
+	free(fdf->matrix.rot_x_neg);
+	free(fdf->matrix.rot_y_pos);
+	free(fdf->matrix.rot_y_neg);
+	free(fdf->matrix.rot_z_pos);
+	free(fdf->matrix.rot_z_neg);
+	free(fdf->matrix.homo_in);
+	free(fdf->matrix.homo_out);
 }
 
 void	init_app(t_env *env)
@@ -61,7 +85,7 @@ void	init_app(t_env *env)
 	cam->u.x = 1;
 	cam->u.y = 0;
 	cam->u.z = 0;
-	cam->speed = 30;
+	cam->speed = 1;
 	cam->sensitivity = 0.04;
 	cam->projection = perspective;
 }
@@ -81,4 +105,20 @@ int		process_app(void *venv)
 		fdf->to_draw = 0;
 	}
 	return (1);
+}
+
+void	destroy_app(t_env *env)
+{
+	t_fdf		*fdf;
+	t_2ipair	c;
+
+	fdf = (t_fdf *)env->app.d;
+	free_matrix((t_fdf *)env->app.d);
+	free(((t_fdf *)env->app.d)->scene.camera.z_buffer);
+	c.y = 0;
+	while (c.y < fdf->map->height)
+		free(fdf->map->points[c.y++]);
+	free(fdf->map->points);
+	free(((t_fdf *)env->app.d)->map);
+	free(env->app.d);
 }

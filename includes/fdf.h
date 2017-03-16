@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 16:59:40 by nboste            #+#    #+#             */
-/*   Updated: 2017/02/21 01:23:36 by nboste           ###   ########.fr       */
+/*   Updated: 2017/03/16 18:07:56 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,7 @@ typedef struct		s_fdf
 void	init_app(t_env *env);
 
 int		process_app(void *env);
+
+void	destroy_app(t_env *env);
 
 #endif

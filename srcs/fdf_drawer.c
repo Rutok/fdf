@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 22:07:20 by nboste            #+#    #+#             */
-/*   Updated: 2017/03/04 03:07:11 by nboste           ###   ########.fr       */
+/*   Updated: 2017/03/15 15:51:59 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ void	fdf_draw_img(t_env *env)
 		{
 			p = &fdf->map->points[c.y][c.x];
 			to_camera_space(&p->pos, &p->c_space, cam);
+			p->d = (p->c_space.x * p->c_space.x) + (p->c_space.y * p->c_space.y) + (p->c_space.z * p->c_space.z);
 			if (p->c_space.z > 0)
 			{
-				p->d = (p->c_space.x * p->c_space.x) + (p->c_space.y * p->c_space.y) + (p->c_space.z * p->c_space.z);
 				if (p->d < fdf->range)
 				{
 					p->draw = 1;
