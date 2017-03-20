@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 18:18:34 by nboste            #+#    #+#             */
-/*   Updated: 2017/03/16 18:33:37 by nboste           ###   ########.fr       */
+/*   Updated: 2017/03/20 18:31:22 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,12 @@ void	fdf_events(t_env *env)
 	}
 	if (ev->keys[SDL_SCANCODE_PAGEUP])
 	{
-		fdf_apply_matrix(fdf->map, fdf->matrix.homo_in);
+		((t_3dobject *)fdf->scene.objects->content)->scale *= 1.1;
 		fdf->to_draw = 1;
 	}
 	if (ev->keys[SDL_SCANCODE_PAGEDOWN])
 	{
-		fdf_apply_matrix(fdf->map, fdf->matrix.homo_out);
+		((t_3dobject *)fdf->scene.objects->content)->scale *= .9;
 		fdf->to_draw = 1;
 	}
 	if (ev->keys[SDL_SCANCODE_W])
@@ -119,11 +119,13 @@ void	fdf_events(t_env *env)
 	if (ev->keys[SDL_SCANCODE_O])
 	{
 		fdf->range *= 1.1;
+		fdf->scene.camera.range *= 1.1;
 		fdf->to_draw = 1;
 	}
 	if (ev->keys[SDL_SCANCODE_L])
 	{
 		fdf->range *= .9;
+		fdf->scene.camera.range *= .9;
 		fdf->to_draw = 1;
 	}
 	static int tmp_m;

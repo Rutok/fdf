@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 16:59:28 by nboste            #+#    #+#             */
-/*   Updated: 2017/03/16 18:56:51 by nboste           ###   ########.fr       */
+/*   Updated: 2017/03/20 18:38:35 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "drawer.h"
 #include "fdf_event.h"
 #include "camera.h"
+#include "scene.h"
 
 static void		init_matrix(t_fdf *fdf)
 {
@@ -66,16 +67,18 @@ void	init_app(t_env *env)
 		ft_exit(MALLOC_FAILED);
 	fdf = (t_fdf *)env->app.d;
 	init_matrix(fdf);
-	fdf->map = fdf_get_map(env->app.argv[1]);
+	//ft_lstadd(&fdf->scene.objects, ft_lstnew(fdf_get_obj(env->app.argv[1]), sizeof(t_3dobject *)));
+	fdf->scene.objects = ft_lstnew(&fdf, sizeof(0));
+	fdf->scene.objects->content = fdf_get_obj(env->app.argv[1]);
 	fdf->to_draw = 0;
 	fdf->range = 500000;
-	fdf_translate(fdf->map, DIR_Y, -fdf->map->height * 10 / 2);
-	fdf_translate(fdf->map, DIR_X, -fdf->map->width * 10 / 2);
+//	fdf_translate(fdf->map, DIR_Y, -fdf->map->height * 10 / 2);
+//	fdf_translate(fdf->map, DIR_X, -fdf->map->width * 10 / 2);
 	cam = &fdf->scene.camera;
 	init_camera(env, ft_degtorad(135), &fdf->scene.camera);
-	cam->pos.x = 0;
-	cam->pos.y = 0;
-	cam->pos.z = 10;
+	cam->pos.x = 50;
+	cam->pos.y = 50;
+	cam->pos.z = 100;
 	cam->n.x = 0;
 	cam->n.y = 1;
 	cam->n.z = 0;
@@ -88,6 +91,7 @@ void	init_app(t_env *env)
 	cam->speed = 1;
 	cam->sensitivity = 0.04;
 	cam->projection = perspective;
+	cam->range = 500000;
 }
 
 int		process_app(void *venv)
@@ -100,7 +104,7 @@ int		process_app(void *venv)
 	fdf_events(env);
 	if (fdf->to_draw)
 	{
-		fdf_draw_img(env);
+		draw_scene(&fdf->scene, env);
 		drawer_wait_copy(env, &((t_fdf *)env->app.d)->scene.camera);
 		fdf->to_draw = 0;
 	}
@@ -110,15 +114,9 @@ int		process_app(void *venv)
 void	destroy_app(t_env *env)
 {
 	t_fdf		*fdf;
-	t_2ipair	c;
 
 	fdf = (t_fdf *)env->app.d;
 	free_matrix((t_fdf *)env->app.d);
 	free(((t_fdf *)env->app.d)->scene.camera.z_buffer);
-	c.y = 0;
-	while (c.y < fdf->map->height)
-		free(fdf->map->points[c.y++]);
-	free(fdf->map->points);
-	free(((t_fdf *)env->app.d)->map);
 	free(env->app.d);
 }

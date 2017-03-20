@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:20:26 by nboste            #+#    #+#             */
-/*   Updated: 2017/03/16 17:52:19 by nboste           ###   ########.fr       */
+/*   Updated: 2017/03/20 18:15:30 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,30 +83,48 @@ static t_color	fdf_getcolor(char *str, int z)
 	return (color);
 }
 
-static void	fdf_fill_map(t_map *map, t_list *list)
+static void	fdf_fill_obj(t_3dobject *obj, t_list *list, int width)
 {
 	int		x;
 	int		y;
 	char	*str;
 	t_list	*tmp;
+	t_face	f;
 
-	if (!(map->points = (t_fdfpoint **)malloc(sizeof(t_fdfpoint *) * map->height)))
-		ft_exit("Cant allocate memory.");
 	y = 0;
+	fdf_getcolor("10\0", 2);
+	obj->faces = NULL;
 	while (list)
 	{
-		if (!(map->points[y] = (t_fdfpoint *)malloc(sizeof(t_fdfpoint) * map->width)))
-			ft_exit("Cant allocate memory.");
 		x = 0;
-		while (x < map->width)
+		while (x < width)
 		{
 			str = ((*(char ***)list->content)[x]);
 			if (!(ft_isdigit(str[0]) || (str[0] == '-' && ft_isdigit(str[1]))))
 				ft_exit("Bad map :')");
-			map->points[y][x].pos.x = x * 10;
-			map->points[y][x].pos.y = y * 10;
-			map->points[y][x].pos.z = ft_atoi(str) / 23.0;
-			map->points[y][x].color = fdf_getcolor(str, map->points[y][x].pos.z);
+			if (x < width - 1 && list->next != NULL)
+			{
+				f.v1.x = x * 10;
+				f.v1.y = y * 10;
+				f.v1.z = ft_atoi(str);
+				f.v2.x = (x + 1) * 10;
+				f.v2.y = y * 10;
+				f.v2.z = ft_atoi((*(char ***)list->content)[x + 1]);
+				f.v3.x = x * 10;
+				f.v3.y = (y + 1) * 10;
+				f.v3.z = ft_atoi((*(char ***)list->next->content)[x]);
+				ft_lstadd(&obj->faces, ft_lstnew(&f, sizeof(t_face)));
+				f.v1.x = (x + 1) * 10;
+				f.v1.y = y * 10;
+				f.v1.z = ft_atoi((*(char ***)list->content)[x + 1]);
+				f.v2.x = (x + 1) * 10;
+				f.v2.y = (y + 1) * 10;
+				f.v2.z = ft_atoi((*(char ***)list->next->content)[x + 1]);
+				f.v3.x = x * 10;
+				f.v3.y = (y + 1) * 10;
+				f.v3.z = ft_atoi((*(char ***)list->next->content)[x]);
+				ft_lstadd(&obj->faces, ft_lstnew(&f, sizeof(t_face)));
+			}
 			free(str);
 			x++;
 		}
@@ -119,37 +137,52 @@ static void	fdf_fill_map(t_map *map, t_list *list)
 	}
 }
 
-static void	fdf_build_map(int fd, t_map *map)
+static void	fdf_build_obj(int fd, t_3dobject *obj)
 {
 	char	*line;
 	char	**split_line;
 	t_list	*list;
+	int		width;
 
-	map->width = 0;
-	map->height = 0;
 	list = NULL;
+	width = -1;
 	while (get_next_line(fd, &line) > 0)
 	{
 		split_line = ft_strsplit(line, ' ');
 		free(line);
-		if (!map->height++)
-			map->width = fdf_get_width(split_line);
-		if (fdf_get_width(split_line) != map->width)
+		if (width == -1)
+			width = fdf_get_width(split_line);
+		if (fdf_get_width(split_line) != width)
 			ft_exit("Bad map :'(");
 		ft_lstadd(&list, ft_lstnew(&split_line, sizeof(char ***)));
 	}
-	fdf_fill_map(map, list);
+	fdf_fill_obj(obj, list, width);
 }
-t_map	*fdf_get_map(char *path)
+
+t_3dobject	*fdf_get_obj(char *path)
 {
-	int		fd;
-	t_map	*map;
+	int			fd;
+	t_3dobject	*obj;
 
 	if ((fd = open(path, O_RDONLY)) < 0)
 		ft_exit("The file can't be opened.");
-	if (!(map = (t_map *)malloc(sizeof(t_map))))
+	if (!(obj = (t_3dobject *)malloc(sizeof(t_3dobject))))
 		ft_exit("Could not allocate memory");
-	fdf_build_map(fd, map);
+	fdf_build_obj(fd, obj);
 	close(fd);
-	return (map);
+	obj->pos.x = 0;
+	obj->pos.y = 0;
+	obj->pos.z = 0;
+	obj->uvn.n.x = 0;
+	obj->uvn.n.y = 0;
+	obj->uvn.n.z = 1;
+	obj->uvn.v.x = 0;
+	obj->uvn.v.y = 1;
+	obj->uvn.v.z = 0;
+	obj->uvn.u.x = 1;
+	obj->uvn.u.y = 0;
+	obj->uvn.u.z = 0;
+	obj->scale = 1;
+	return (obj);
+
 }

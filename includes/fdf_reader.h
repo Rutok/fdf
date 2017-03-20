@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:14:27 by nboste            #+#    #+#             */
-/*   Updated: 2017/03/04 03:07:58 by nboste           ###   ########.fr       */
+/*   Updated: 2017/03/20 16:07:10 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,6 @@ typedef struct	s_map
 	int			height;
 }				t_map;
 
-t_map	*fdf_get_map(char *path);
+t_3dobject		*fdf_get_obj(char *path);
 
 #endif
