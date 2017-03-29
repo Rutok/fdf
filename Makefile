@@ -6,7 +6,7 @@
 #    By: nboste <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/12/08 23:43:17 by nboste            #+#    #+#              #
-#*   Updated: 2017/03/15 14:11:13 by nboste           ###   ########.fr       *#
+#*   Updated: 2017/03/21 00:53:04 by nboste           ###   ########.fr       *#
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,10 @@ SRC = srcs/main.c \
 	  srcs/fdf_process.c \
 	  srcs/fdf_matrix.c \
 	  srcs/fdf_event.c \
+	  srcs/obj_parser.c \
+	  srcs/ft_atod.c \
+	  srcs/array_3dv.c \
+	  srcs/array_2dp.c \
 
 OBJ = $(SRC:%.c=%.o)
 

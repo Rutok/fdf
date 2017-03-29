@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:20:26 by nboste            #+#    #+#             */
-/*   Updated: 2017/03/20 18:15:30 by nboste           ###   ########.fr       */
+/*   Updated: 2017/03/22 14:37:05 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,16 +173,18 @@ t_3dobject	*fdf_get_obj(char *path)
 	obj->pos.x = 0;
 	obj->pos.y = 0;
 	obj->pos.z = 0;
-	obj->uvn.n.x = 0;
+	obj->uvn.n.x = 1;
 	obj->uvn.n.y = 0;
-	obj->uvn.n.z = 1;
+	obj->uvn.n.z = 0;
 	obj->uvn.v.x = 0;
-	obj->uvn.v.y = 1;
-	obj->uvn.v.z = 0;
-	obj->uvn.u.x = 1;
-	obj->uvn.u.y = 0;
+	obj->uvn.v.y = 0;
+	obj->uvn.v.z = 1;
+	obj->uvn.u.x = 0;
+	obj->uvn.u.y = 1;
 	obj->uvn.u.z = 0;
-	obj->scale = 1;
+	obj->scale.x = 1;
+	obj->scale.y = 1;
+	obj->scale.z = 1;
 	return (obj);
 
 }
