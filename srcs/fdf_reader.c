@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:20:26 by nboste            #+#    #+#             */
-/*   Updated: 2017/05/28 13:32:53 by nboste           ###   ########.fr       */
+/*   Updated: 2017/05/28 14:02:53 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ static t_color	fdf_getcolor(char *str, int z)
 	return (color);
 }
 
-static void	fdf_fill_obj(t_3dobject *obj, t_list *list, int width)
+static void	fdf_fill_obj(t_3dobject *obj, t_list *list, int width, t_3dvertex v)
 {
 	int		x;
 	int		y;
@@ -103,30 +103,30 @@ static void	fdf_fill_obj(t_3dobject *obj, t_list *list, int width)
 				ft_exit("Bad map :')");
 			if (x < width - 1 && list->next != NULL)
 			{
-				f.v1.x = x * 10;
-				f.v1.y = y * 10;
-				f.v1.z = ft_atoi(str);
+				f.v1.x = x * v.x;
+				f.v1.y = y * v.y;
+				f.v1.z = ft_atoi(str) / v.z;
 				f.c1 = fdf_getcolor(str, f.v1.z);
-				f.v2.x = (x + 1) * 10;
-				f.v2.y = y * 10;
-				f.v2.z = ft_atoi((*(char ***)list->content)[x + 1]);
+				f.v2.x = (x + 1) * v.x;
+				f.v2.y = y * v.y;
+				f.v2.z = ft_atoi((*(char ***)list->content)[x + 1]) / v.z;
 				f.c2 = fdf_getcolor((*(char ***)list->content)[x + 1], f.v2.z);
-				f.v3.x = x * 10;
-				f.v3.y = (y + 1) * 10;
-				f.v3.z = ft_atoi((*(char ***)list->next->content)[x]);
+				f.v3.x = x * v.x;
+				f.v3.y = (y + 1) * v.y;
+				f.v3.z = ft_atoi((*(char ***)list->next->content)[x]) / v.z;
 				f.c3 = fdf_getcolor((*(char ***)list->next->content)[x], f.v3.z);
 				ft_lstadd(&obj->faces, ft_lstnew(&f, sizeof(t_face)));
-				f.v1.x = (x + 1) * 10;
-				f.v1.y = y * 10;
-				f.v1.z = ft_atoi((*(char ***)list->content)[x + 1]);
+				f.v1.x = (x + 1) * v.x;
+				f.v1.y = y * v.y;
+				f.v1.z = ft_atoi((*(char ***)list->content)[x + 1]) / v.z;
 				f.c1 = fdf_getcolor((*(char ***)list->content)[x + 1], f.v1.z);
-				f.v2.x = (x + 1) * 10;
-				f.v2.y = (y + 1) * 10;
-				f.v2.z = ft_atoi((*(char ***)list->next->content)[x + 1]);
+				f.v2.x = (x + 1) * v.x;
+				f.v2.y = (y + 1) * v.y;
+				f.v2.z = ft_atoi((*(char ***)list->next->content)[x + 1]) / v.z;
 				f.c2 = fdf_getcolor((*(char ***)list->next->content)[x + 1], f.v2.z);
-				f.v3.x = x * 10;
-				f.v3.y = (y + 1) * 10;
-				f.v3.z = ft_atoi((*(char ***)list->next->content)[x]);
+				f.v3.x = x * v.x;
+				f.v3.y = (y + 1) * v.y;
+				f.v3.z = ft_atoi((*(char ***)list->next->content)[x]) / v.z;
 				f.c3 = fdf_getcolor((*(char ***)list->next->content)[x], f.v3.z);
 				ft_lstadd(&obj->faces, ft_lstnew(&f, sizeof(t_face)));
 			}
@@ -142,7 +142,7 @@ static void	fdf_fill_obj(t_3dobject *obj, t_list *list, int width)
 	}
 }
 
-static void	fdf_build_obj(int fd, t_3dobject *obj)
+static void	fdf_build_obj(int fd, t_3dobject *obj, t_3dvertex v)
 {
 	char	*line;
 	char	**split_line;
@@ -163,19 +163,26 @@ static void	fdf_build_obj(int fd, t_3dobject *obj)
 	}
 	if (width == -1 || list->next == 0)
 		ft_exit("Bad map :'(");
-	fdf_fill_obj(obj, list, width);
+	fdf_fill_obj(obj, list, width, v);
 }
 
 t_3dobject	*fdf_get_obj(char *path)
 {
 	int			fd;
 	t_3dobject	*obj;
+	t_3dvertex	v;
 
 	if ((fd = open(path, O_RDONLY)) < 0)
 		ft_exit("The file can't be opened.");
 	if (!(obj = (t_3dobject *)malloc(sizeof(t_3dobject))))
 		ft_exit("Could not allocate memory");
-	fdf_build_obj(fd, obj);
+	v.x = 10;
+	v.y = 10;
+	if (!ft_strcmp("maps/MGDS_WHOLE_WORLD_OCEAN1_XXL.fdf", path) || !ft_strcmp("maps/MGDS_EAST_AFRICAN_RIFT_SYSTEM_OCEAN1_XXL.fdf", path))
+		v.z = 20;
+	else
+		v.z = 1;
+	fdf_build_obj(fd, obj, v);
 	close(fd);
 	obj->pos.x = 0;
 	obj->pos.y = 0;
