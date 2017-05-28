@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:20:26 by nboste            #+#    #+#             */
-/*   Updated: 2017/03/22 14:37:05 by nboste           ###   ########.fr       */
+/*   Updated: 2017/05/28 13:32:53 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,6 @@ static void	fdf_fill_obj(t_3dobject *obj, t_list *list, int width)
 	t_face	f;
 
 	y = 0;
-	fdf_getcolor("10\0", 2);
 	obj->faces = NULL;
 	while (list)
 	{
@@ -107,22 +106,28 @@ static void	fdf_fill_obj(t_3dobject *obj, t_list *list, int width)
 				f.v1.x = x * 10;
 				f.v1.y = y * 10;
 				f.v1.z = ft_atoi(str);
+				f.c1 = fdf_getcolor(str, f.v1.z);
 				f.v2.x = (x + 1) * 10;
 				f.v2.y = y * 10;
 				f.v2.z = ft_atoi((*(char ***)list->content)[x + 1]);
+				f.c2 = fdf_getcolor((*(char ***)list->content)[x + 1], f.v2.z);
 				f.v3.x = x * 10;
 				f.v3.y = (y + 1) * 10;
 				f.v3.z = ft_atoi((*(char ***)list->next->content)[x]);
+				f.c3 = fdf_getcolor((*(char ***)list->next->content)[x], f.v3.z);
 				ft_lstadd(&obj->faces, ft_lstnew(&f, sizeof(t_face)));
 				f.v1.x = (x + 1) * 10;
 				f.v1.y = y * 10;
 				f.v1.z = ft_atoi((*(char ***)list->content)[x + 1]);
+				f.c1 = fdf_getcolor((*(char ***)list->content)[x + 1], f.v1.z);
 				f.v2.x = (x + 1) * 10;
 				f.v2.y = (y + 1) * 10;
 				f.v2.z = ft_atoi((*(char ***)list->next->content)[x + 1]);
+				f.c2 = fdf_getcolor((*(char ***)list->next->content)[x + 1], f.v2.z);
 				f.v3.x = x * 10;
 				f.v3.y = (y + 1) * 10;
 				f.v3.z = ft_atoi((*(char ***)list->next->content)[x]);
+				f.c3 = fdf_getcolor((*(char ***)list->next->content)[x], f.v3.z);
 				ft_lstadd(&obj->faces, ft_lstnew(&f, sizeof(t_face)));
 			}
 			free(str);
@@ -156,6 +161,8 @@ static void	fdf_build_obj(int fd, t_3dobject *obj)
 			ft_exit("Bad map :'(");
 		ft_lstadd(&list, ft_lstnew(&split_line, sizeof(char ***)));
 	}
+	if (width == -1 || list->next == 0)
+		ft_exit("Bad map :'(");
 	fdf_fill_obj(obj, list, width);
 }
 

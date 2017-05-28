@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 18:18:34 by nboste            #+#    #+#             */
-/*   Updated: 2017/03/24 20:14:15 by nboste           ###   ########.fr       */
+/*   Updated: 2017/05/28 11:41:04 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void	fdf_events(t_env *env)
 	z.y = 0;
 	z.z = 1;
 
-	t_3dobject *obj = (t_3dobject *)fdf->scene.objects->next->content;
 	if (ev->mouse.move)
 	{
 		t_2dpair	d;
@@ -51,12 +50,6 @@ void	fdf_events(t_env *env)
 			rotate_3dvertex(&cam->n, z, ft_degtorad(d.x));
 			rotate_3dvertex(&cam->n, cam->u, ft_degtorad(d.y));
 			rotate_3dvertex(&cam->v, cam->u, ft_degtorad(d.y));
-
-			rotate_3dvertex(&obj->uvn.u, obj->uvn.v, ft_degtorad(d.x));
-			  rotate_3dvertex(&obj->uvn.n, obj->uvn.v, ft_degtorad(d.x));
-			  rotate_3dvertex(&obj->uvn.n, z, ft_degtorad(-d.y));
-			  rotate_3dvertex(&obj->uvn.v, z, ft_degtorad(-d.y));
-			  rotate_3dvertex(&obj->uvn.u, z, ft_degtorad(-d.y));
 			SDL_WarpMouseInWindow(NULL, cam->size.x / 2, cam->size.y / 2);
 			fdf->to_draw = 1;
 		}
@@ -65,42 +58,40 @@ void	fdf_events(t_env *env)
 		ev->exit = 1;
 	if (ev->keys[SDL_SCANCODE_W])
 	{
-		obj->pos.x += cam->n.x * cam->speed;
-		obj->pos.y += cam->n.y * cam->speed;
-		obj->pos.z += cam->n.z * cam->speed;
+		cam->pos.x += cam->n.x * cam->speed;
+		cam->pos.y += cam->n.y * cam->speed;
+		cam->pos.z += cam->n.z * cam->speed;
 		fdf->to_draw = 1;
 	}
 	if (ev->keys[SDL_SCANCODE_A])
 	{
-		obj->pos.x -= cam->u.x * cam->speed;
-		obj->pos.y -= cam->u.y * cam->speed;
-		obj->pos.z -= cam->u.z * cam->speed;
+		cam->pos.x -= cam->u.x * cam->speed;
+		cam->pos.y -= cam->u.y * cam->speed;
+		cam->pos.z -= cam->u.z * cam->speed;
 		fdf->to_draw = 1;
 	}
 	if (ev->keys[SDL_SCANCODE_S])
 	{
-		obj->pos.x -= cam->n.x * cam->speed;
-		obj->pos.y -= cam->n.y * cam->speed;
-		obj->pos.z -= cam->n.z * cam->speed;
+		cam->pos.x -= cam->n.x * cam->speed;
+		cam->pos.y -= cam->n.y * cam->speed;
+		cam->pos.z -= cam->n.z * cam->speed;
 		fdf->to_draw = 1;
 	}
 	if (ev->keys[SDL_SCANCODE_D])
 	{
-		obj->pos.x += cam->u.x * cam->speed;
-		obj->pos.y += cam->u.y * cam->speed;
-		obj->pos.z += cam->u.z * cam->speed;
+		cam->pos.x += cam->u.x * cam->speed;
+		cam->pos.y += cam->u.y * cam->speed;
+		cam->pos.z += cam->u.z * cam->speed;
 		fdf->to_draw = 1;
 	}
 	if (ev->keys[SDL_SCANCODE_O])
 	{
-		fdf->range *= 1.1;
-		fdf->scene.camera.range *= 1.01;
+		fdf->scene.camera.range *= 1.1;
 		fdf->to_draw = 1;
 	}
 	if (ev->keys[SDL_SCANCODE_L])
 	{
-		fdf->range *= .9;
-		fdf->scene.camera.range *= .09;
+		fdf->scene.camera.range *= .90;
 		fdf->to_draw = 1;
 	}
 	static int tmp_u;
@@ -109,9 +100,6 @@ void	fdf_events(t_env *env)
 	else if (tmp_u)
 	{
 		init_camera(env, fdf->scene.camera.fov.y * 1.1, &fdf->scene.camera);
-	//	rotate_3dvertex(&(((t_3dobject *)fdf->scene.objects->next->content)->uvn.v), (((t_3dobject *)fdf->scene.objects->next->content)->uvn.u), ft_degtorad(1));
-	//	rotate_3dvertex(&(((t_3dobject *)fdf->scene.objects->next->content)->uvn.u), z, ft_degtorad(1));
-	//	rotate_3dvertex(&(((t_3dobject *)fdf->scene.objects->next->content)->uvn.n), (((t_3dobject *)fdf->scene.objects->next->content)->uvn.u), ft_degtorad(1));
 		fdf->to_draw = 1;
 		tmp_u = 0;
 	}
@@ -121,9 +109,6 @@ void	fdf_events(t_env *env)
 	else if (tmp_j)
 	{
 		init_camera(env, fdf->scene.camera.fov.y * 0.9, &fdf->scene.camera);
-	//	rotate_3dvertex(&(((t_3dobject *)fdf->scene.objects->next->content)->uvn.v), z, ft_degtorad(-1));
-	//	rotate_3dvertex(&(((t_3dobject *)fdf->scene.objects->next->content)->uvn.u), z, ft_degtorad(-1));
-	//	rotate_3dvertex(&(((t_3dobject *)fdf->scene.objects->next->content)->uvn.n), z, ft_degtorad(-1));
 		fdf->to_draw = 1;
 		tmp_j = 0;
 	}

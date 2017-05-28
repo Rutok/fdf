@@ -16,14 +16,7 @@ FLG = -Wall -Wextra -Werror
 SRC = srcs/main.c \
 	  srcs/fdf.c \
 	  srcs/fdf_reader.c \
-	  srcs/fdf_drawer.c \
-	  srcs/fdf_process.c \
-	  srcs/fdf_matrix.c \
 	  srcs/fdf_event.c \
-	  srcs/obj_parser.c \
-	  srcs/ft_atod.c \
-	  srcs/array_3dv.c \
-	  srcs/array_2dp.c \
 
 OBJ = $(SRC:%.c=%.o)
 
