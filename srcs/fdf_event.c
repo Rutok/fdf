@@ -6,13 +6,12 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 18:18:34 by nboste            #+#    #+#             */
-/*   Updated: 2017/05/28 11:41:04 by nboste           ###   ########.fr       */
+/*   Updated: 2017/05/28 13:48:49 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf_event.h"
 #include "fdf.h"
-#include "fdf_process.h"
 #include <SDL2/SDL.h>
 #include "vertex_utility.h"
 #include "camera.h"

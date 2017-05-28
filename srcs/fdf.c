@@ -6,19 +6,16 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 16:59:28 by nboste            #+#    #+#             */
-/*   Updated: 2017/05/28 11:48:12 by nboste           ###   ########.fr       */
+/*   Updated: 2017/05/28 13:48:32 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include "fdf_reader.h"
-#include "fdf_process.h"
-#include "fdf_drawer.h"
 #include "drawer.h"
 #include "fdf_event.h"
 #include "camera.h"
 #include "scene.h"
-#include "obj_parser.h"
 
 void	init_app(t_env *env)
 {
