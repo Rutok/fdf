@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 16:59:28 by nboste            #+#    #+#             */
-/*   Updated: 2017/05/28 13:48:32 by nboste           ###   ########.fr       */
+/*   Updated: 2017/05/28 14:29:56 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,8 @@
 #include "camera.h"
 #include "scene.h"
 
-void	init_app(t_env *env)
+static void	set_cam(t_camera *cam)
 {
-	t_fdf		*fdf;
-	t_camera	*cam;
-	t_3dobject	obj;
-
-	if(!(env->app.d = (void *)malloc(sizeof(t_fdf))))
-		ft_exit(MALLOC_FAILED);
-	fdf = (t_fdf *)env->app.d;
-	cam = &fdf->scene.camera;
-	fdf->scene.objects = NULL;
-	ft_lstadd(&(fdf->scene.objects), ft_lstnew(&(obj), sizeof(t_3dobject)));
-	(fdf->scene.objects->content) = fdf_get_obj(env->app.argv[1]);
-	init_camera(env, ft_degtorad(90), &fdf->scene.camera);
 	cam->pos.x = 0;
 	cam->pos.y = 0;
 	cam->pos.z = 0;
@@ -47,10 +35,27 @@ void	init_app(t_env *env)
 	cam->sensitivity = 0.04;
 	cam->projection = perspective;
 	cam->range = 500;
+}
+
+void		init_app(t_env *env)
+{
+	t_fdf		*fdf;
+	t_camera	*cam;
+	t_3dobject	obj;
+
+	if (!(env->app.d = (void *)malloc(sizeof(t_fdf))))
+		ft_exit(MALLOC_FAILED);
+	fdf = (t_fdf *)env->app.d;
+	cam = &fdf->scene.camera;
+	fdf->scene.objects = NULL;
+	ft_lstadd(&(fdf->scene.objects), ft_lstnew(&(obj), sizeof(t_3dobject)));
+	(fdf->scene.objects->content) = fdf_get_obj(env->app.argv[1]);
+	init_camera(env, ft_degtorad(90), &fdf->scene.camera);
+	set_cam(cam);
 	fdf->to_draw = 1;
 }
 
-int		process_app(void *venv)
+int			process_app(void *venv)
 {
 	t_env	*env;
 	t_fdf	*fdf;
@@ -67,7 +72,7 @@ int		process_app(void *venv)
 	return (1);
 }
 
-void	destroy_app(t_env *env)
+void		destroy_app(t_env *env)
 {
 	t_fdf		*fdf;
 

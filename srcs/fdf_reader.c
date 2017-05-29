@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:20:26 by nboste            #+#    #+#             */
-/*   Updated: 2017/05/28 14:02:53 by nboste           ###   ########.fr       */
+/*   Updated: 2017/05/29 16:44:14 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	fdf_get_width(char **split)
 	return (i);
 }
 
-static t_color	fdf_getcolorz(int z)
+t_color		fdf_getcolorz(int z)
 {
 	t_color	c;
 
@@ -50,7 +50,7 @@ static t_color	fdf_getcolorz(int z)
 	return (c);
 }
 
-static t_color	fdf_getcolor(char *str, int z)
+/*static t_color	fdf_c(char *str, int z)
 {
 	char	*c;
 	int		val;
@@ -81,9 +81,9 @@ static t_color	fdf_getcolor(char *str, int z)
 	else
 		color = fdf_getcolorz(z);
 	return (color);
-}
+}*/
 
-static void	fdf_fill_obj(t_3dobject *obj, t_list *list, int width, t_3dvertex v)
+static void	fdf_fill_obj(t_3dobject *obj, t_list *lst, int width, t_3dvertex v)
 {
 	int		x;
 	int		y;
@@ -93,49 +93,34 @@ static void	fdf_fill_obj(t_3dobject *obj, t_list *list, int width, t_3dvertex v)
 
 	y = 0;
 	obj->faces = NULL;
-	while (list)
+	while (lst)
 	{
 		x = 0;
 		while (x < width)
 		{
-			str = ((*(char ***)list->content)[x]);
+			str = ((*(char ***)lst->content)[x]);
 			if (!(ft_isdigit(str[0]) || (str[0] == '-' && ft_isdigit(str[1]))))
 				ft_exit("Bad map :')");
-			if (x < width - 1 && list->next != NULL)
+			obj->vertexes.v[x + width * y].x = x * v.x;
+			obj->vertexes.v[x + width * y].y = y * v.y;
+			obj->vertexes.v[x + width * y].z = ft_atoi(str) / v.z;
+			if (x < width - 1 && lst->next != NULL)
 			{
-				f.v1.x = x * v.x;
-				f.v1.y = y * v.y;
-				f.v1.z = ft_atoi(str) / v.z;
-				f.c1 = fdf_getcolor(str, f.v1.z);
-				f.v2.x = (x + 1) * v.x;
-				f.v2.y = y * v.y;
-				f.v2.z = ft_atoi((*(char ***)list->content)[x + 1]) / v.z;
-				f.c2 = fdf_getcolor((*(char ***)list->content)[x + 1], f.v2.z);
-				f.v3.x = x * v.x;
-				f.v3.y = (y + 1) * v.y;
-				f.v3.z = ft_atoi((*(char ***)list->next->content)[x]) / v.z;
-				f.c3 = fdf_getcolor((*(char ***)list->next->content)[x], f.v3.z);
+				f.v1 = x + width * y;
+				f.v2 = (x + 1) + width * y;
+				f.v3 = x + width * (y + 1);
 				ft_lstadd(&obj->faces, ft_lstnew(&f, sizeof(t_face)));
-				f.v1.x = (x + 1) * v.x;
-				f.v1.y = y * v.y;
-				f.v1.z = ft_atoi((*(char ***)list->content)[x + 1]) / v.z;
-				f.c1 = fdf_getcolor((*(char ***)list->content)[x + 1], f.v1.z);
-				f.v2.x = (x + 1) * v.x;
-				f.v2.y = (y + 1) * v.y;
-				f.v2.z = ft_atoi((*(char ***)list->next->content)[x + 1]) / v.z;
-				f.c2 = fdf_getcolor((*(char ***)list->next->content)[x + 1], f.v2.z);
-				f.v3.x = x * v.x;
-				f.v3.y = (y + 1) * v.y;
-				f.v3.z = ft_atoi((*(char ***)list->next->content)[x]) / v.z;
-				f.c3 = fdf_getcolor((*(char ***)list->next->content)[x], f.v3.z);
+				f.v1 = (x + 1) + width * (y + 1);
+				f.v2 = (x + 1) + width * y;
+				f.v3 = x + width * (y + 1);
 				ft_lstadd(&obj->faces, ft_lstnew(&f, sizeof(t_face)));
 			}
 			free(str);
 			x++;
 		}
 		y++;
-		tmp = list;
-		list = list->next;
+		tmp = lst;
+		lst = lst->next;
 		free(*(char ***)tmp->content);
 		free((char ***)tmp->content);
 		free(tmp);
@@ -148,9 +133,11 @@ static void	fdf_build_obj(int fd, t_3dobject *obj, t_3dvertex v)
 	char	**split_line;
 	t_list	*list;
 	int		width;
+	int		i;
 
 	list = NULL;
 	width = -1;
+	i = 0;
 	while (get_next_line(fd, &line) > 0)
 	{
 		split_line = ft_strsplit(line, ' ');
@@ -160,8 +147,10 @@ static void	fdf_build_obj(int fd, t_3dobject *obj, t_3dvertex v)
 		if (fdf_get_width(split_line) != width)
 			ft_exit("Bad map :'(");
 		ft_lstadd(&list, ft_lstnew(&split_line, sizeof(char ***)));
+		i++;
 	}
-	if (width == -1 || list->next == 0)
+	obj->vertexes.size = i * width;
+	if (width == -1 || list->next == 0 || !(obj->vertexes.v = (t_3dvertex *)malloc(sizeof(t_3dvertex) * i * width)) || !(obj->vertexes.v2 = (t_3dvertex *)malloc(sizeof(t_3dvertex) * i * width)))
 		ft_exit("Bad map :'(");
 	fdf_fill_obj(obj, list, width, v);
 }
@@ -178,11 +167,13 @@ t_3dobject	*fdf_get_obj(char *path)
 		ft_exit("Could not allocate memory");
 	v.x = 10;
 	v.y = 10;
-	if (!ft_strcmp("maps/MGDS_WHOLE_WORLD_OCEAN1_XXL.fdf", path) || !ft_strcmp("maps/MGDS_EAST_AFRICAN_RIFT_SYSTEM_OCEAN1_XXL.fdf", path))
+	if (!ft_strcmp("maps/MGDS_WHOLE_WORLD_OCEAN1_XXL.fdf", path)
+	|| !ft_strcmp("maps/MGDS_EAST_AFRICAN_RIFT_SYSTEM_OCEAN1_XXL.fdf", path))
 		v.z = 20;
 	else
 		v.z = 1;
 	fdf_build_obj(fd, obj, v);
+	obj->getColor = &fdf_getcolorz;
 	close(fd);
 	obj->pos.x = 0;
 	obj->pos.y = 0;
@@ -200,5 +191,4 @@ t_3dobject	*fdf_get_obj(char *path)
 	obj->scale.y = 1;
 	obj->scale.z = 1;
 	return (obj);
-
 }

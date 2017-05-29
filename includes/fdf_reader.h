@@ -6,18 +6,18 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 03:14:27 by nboste            #+#    #+#             */
-/*   Updated: 2017/03/20 16:07:10 by nboste           ###   ########.fr       */
+/*   Updated: 2017/05/29 15:57:53 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_FDF_READER_H
 # define FT_FDF_READER_H
 
-#include "error.h"
-#include "libft.h"
-#include "get_next_line.h"
-#include <fcntl.h>
-#include "types.h"
+# include "error.h"
+# include "libft.h"
+# include "get_next_line.h"
+# include <fcntl.h>
+# include "types.h"
 
 typedef struct	s_fdfpoint
 {
@@ -37,5 +37,7 @@ typedef struct	s_map
 }				t_map;
 
 t_3dobject		*fdf_get_obj(char *path);
+
+t_color			fdf_getcolorz(int z);
 
 #endif
