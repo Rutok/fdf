@@ -16,6 +16,7 @@ FLG = -Wall -Wextra -Werror
 SRC = srcs/main.c \
 	  srcs/fdf.c \
 	  srcs/fdf_reader.c \
+	  srcs/fdf_reader_utility.c \
 	  srcs/fdf_event.c \
 
 OBJ = $(SRC:%.c=%.o)

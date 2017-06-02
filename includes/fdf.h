@@ -6,7 +6,7 @@
 /*   By: nboste <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/09 16:59:40 by nboste            #+#    #+#             */
-/*   Updated: 2017/05/29 13:05:56 by nboste           ###   ########.fr       */
+/*   Updated: 2017/06/02 09:26:39 by nboste           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 
 typedef struct		s_fdf
 {
-	t_map		*map;
 	t_bool		to_draw;
 	t_scene		scene;
 	double		range;
