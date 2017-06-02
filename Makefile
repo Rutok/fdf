@@ -24,12 +24,12 @@ OBJ = $(SRC:%.c=%.o)
 INC = -I./includes \
 	  -I./engine/includes \
 	  -I./engine/libft/includes \
-	  -I/usr/includes\
-	  -I/Library/Frameworks/SDL2.framework/Headers
+	  -I/usr/includes \
+	  -I/Library/Frameworks/SDL2.framework/Headers \
 
 LIB = -L./engine \
 	  -L./engine/libft \
-	  -I/Library/Frameworks/SDL2.framework/ \
+	  -I/Library/Frameworks/SDL2.framework \
 
 all: $(NAME)
 
